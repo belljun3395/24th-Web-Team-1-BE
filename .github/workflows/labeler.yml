@@ -10,7 +10,11 @@ jobs:
       pull-requests: write
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/labeler@v5
+      - name: Check out repository
+        uses: actions/checkout@v2
+
+      - name: Run Labeler
+        uses: actions/labeler@v5.0.0
         with:
           repo-token: ${{secrets.GITHUB_TOKEN}}
           configuration-path: ".github/labeler.yml"
