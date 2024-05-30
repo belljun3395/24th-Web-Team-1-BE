@@ -1,6 +1,6 @@
-#docs:
-#  - changed-files:
-#      - any-glob-to-any-file: '**/docs/**'
+documentation:
+  - changed-files:
+      - any-glob-to-any-file: '**/docs/**'
 
 config:
   - changed-files:
