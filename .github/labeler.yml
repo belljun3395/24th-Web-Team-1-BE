@@ -7,9 +7,9 @@
 #      - any-glob-to-any-file: '**/config/**'
 #  - head-branch: ['^config', 'config']
 #
-#script:
-#  - changed-files:
-#      - any-glob-to-any-file: '**/scripts/**'
+script:
+  - changed-files:
+      - any-glob-to-any-file: '**/scripts/**'
 
 feature:
   - head-branch: ['^feat', 'feat', '^feature', 'feature']
