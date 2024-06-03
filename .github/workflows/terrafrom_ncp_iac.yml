@@ -1,0 +1,40 @@
+name: AWS IaC
+
+on:
+  push:
+    branches:
+      - infra/main
+  workflow_dispatch:
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Terraform Setup
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.8.2
+          cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+
+      - name: Move Terraform Files
+        run: mv infra/terraform/* .
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Format
+        run: terraform fmt -check
+
+      - name: Terraform Plan
+        run: terraform plan -var=ncp_access_key=${{ secrets.NCP_ACCESS_KEY_ID }} -var=ncp_secret_key=${{ secrets.NCP_SECRET_ACCESS_KEY }} -input=false
+
+      - name: Terraform Apply
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: terraform apply -auto-approve -var=ncp_access_key=${{ secrets.NCP_ACCESS_KEY_ID }} -var=ncp_secret_key=${{ secrets.NCP_SECRET_ACCESS_KEY }} -input=false
