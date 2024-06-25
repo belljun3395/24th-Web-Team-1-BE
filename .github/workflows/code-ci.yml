@@ -38,6 +38,10 @@ jobs:
             - name : Docker Login
               run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
 
+            - name : Set Environment Variables
+              run: |
+                  echo "RELEASE_VERSION=${{ env.RELEASE_VERSION }}" >> .env 
+
             - name: Build Docker Image
               run: |
                   ./gradlew --info api:buildDockerImage
