@@ -73,7 +73,11 @@ val releaseVersion = project.hasProperty("releaseVersion").let {
     if (it) {
         project.property("releaseVersion") as String
     } else {
-        "latest"
+        if (System.getenv("RELEASE_VERSION") != null) {
+            System.getenv("RELEASE_VERSION")
+        } else {
+            "latest"
+        }
     }
 }
 
