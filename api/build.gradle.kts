@@ -13,6 +13,10 @@ dependencies {
     implementation("org.springdoc:springdoc-openapi-ui:${DependencyVersion.SPRINGDOC}")
     implementation("org.springframework.restdocs:spring-restdocs-webtestclient")
     implementation("com.epages:restdocs-api-spec-mockmvc:${DependencyVersion.EPAGES_REST_DOCS_API_SPEC}")
+
+    /** test container */
+    implementation(platform("org.testcontainers:testcontainers-bom:${DependencyVersion.TEST_CONTAINER}"))
+    testImplementation("org.testcontainers:mysql")
 }
 
 plugins {
@@ -56,4 +60,45 @@ tasks.register("generateApiSwaggerUI", Copy::class) {
     val generateSwaggerUISampleTask = tasks.named("generateSwaggerUIApi", GenerateSwaggerUI::class).get()
     from(generateSwaggerUISampleTask.outputDir)
     into("$projectDir/src/main/resources/static/docs/swagger-ui")
+}
+
+val imageName = project.hasProperty("imageName").let {
+    if (it) {
+        project.property("imageName") as String
+    } else {
+        "api"
+    }
+}
+val releaseVersion = project.hasProperty("releaseVersion").let {
+    if (it) {
+        project.property("releaseVersion") as String
+    } else {
+        if (System.getenv("RELEASE_VERSION") != null) {
+            System.getenv("RELEASE_VERSION")
+        } else {
+            "latest"
+        }
+    }
+}
+
+tasks.register("buildDockerImage") {
+    dependsOn("bootJar")
+    dependsOn("generateApiSwaggerUI")
+
+    doLast {
+        exec {
+            workingDir(".")
+            commandLine("docker", "run", "--privileged", "--rm", "tonistiigi/binfmt", "--install", "all")
+        }
+
+        exec {
+            workingDir(".")
+            commandLine("docker", "buildx", "create", "--use")
+        }
+
+        exec {
+            workingDir(".")
+            commandLine("docker", "buildx", "build", "--platform=linux/amd64,linux/arm64", "-t", "fewletter/$imageName", "--build-arg", "RELEASE_VERSION=$releaseVersion", ".", "--push")
+        }
+    }
 }
