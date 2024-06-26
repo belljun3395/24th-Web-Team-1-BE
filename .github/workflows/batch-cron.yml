@@ -10,6 +10,7 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v3
+            - name: Batch Article
               run: |
                   curl -X 'POST' \
                     'https://api.fewletter.site/batch/article' \
