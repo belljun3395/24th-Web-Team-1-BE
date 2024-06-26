@@ -6,11 +6,11 @@ dependencies {
     implementation(project(":batch"))
 
     /** spring starter */
-    implementation("org.springframework.boot:spring-boot-starter-webflux")
+    implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
 
     /** swagger & restdocs */
-    implementation("org.springdoc:springdoc-openapi-ui:${DependencyVersion.SPRINGDOC}")
+    implementation("org.springdoc:springdoc-openapi-starter-webflux-ui:${DependencyVersion.SPRINGDOC}")
     implementation("org.springframework.restdocs:spring-restdocs-webtestclient")
     implementation("com.epages:restdocs-api-spec-mockmvc:${DependencyVersion.EPAGES_REST_DOCS_API_SPEC}")
 
@@ -25,9 +25,17 @@ plugins {
     id("org.hidetake.swagger.generator") version DependencyVersion.SWAGGER_GENERATOR
 }
 
+val serverUrl = project.hasProperty("serverUrl").let {
+    if (it) {
+        project.property("serverUrl") as String
+    } else {
+        "http://localhost:8080"
+    }
+}
+
 /** convert snippet to swagger */
 openapi3 {
-    this.setServer("http://localhost:8080") // todo refactor to use setServers
+    this.setServer(serverUrl)
     title = project.name
     version = project.version.toString()
     format = "yaml"
@@ -40,7 +48,7 @@ openapi3 {
 postman {
     title = project.name
     version = project.version.toString()
-    baseUrl = "http://localhost:8080"
+    baseUrl = serverUrl
     outputDirectory = "src/main/resources/static/"
     outputFileNamePrefix = "postman"
 }
@@ -79,7 +87,6 @@ val releaseVersion = project.hasProperty("releaseVersion").let {
 
 tasks.register("buildDockerImage") {
     dependsOn("bootJar")
-    dependsOn("generateApiSwaggerUI")
 
     doLast {
         exec {
