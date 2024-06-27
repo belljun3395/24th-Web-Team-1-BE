@@ -6,12 +6,10 @@ import com.few.storage.image.config.ImageStorageConfig
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Import
-import org.springframework.web.servlet.config.annotation.EnableWebMvc
 
 @Configuration
 @ComponentScan(basePackages = [ApiConfig.BASE_PACKAGE])
 @Import(ApiRepoConfig::class, BatchConfig::class, ImageStorageConfig::class)
-@EnableWebMvc
 class ApiConfig {
     companion object {
         const val BASE_PACKAGE = "com.few.api"

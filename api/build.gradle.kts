@@ -1,4 +1,3 @@
-
 import org.hidetake.gradle.swagger.generator.GenerateSwaggerUI
 
 dependencies {
@@ -28,9 +27,17 @@ plugins {
     id("org.hidetake.swagger.generator") version DependencyVersion.SWAGGER_GENERATOR
 }
 
+val serverUrl = project.hasProperty("serverUrl").let {
+    if (it) {
+        project.property("serverUrl") as String
+    } else {
+        "http://localhost:8080"
+    }
+}
+
 /** convert snippet to swagger */
 openapi3 {
-    this.setServer("http://localhost:8080") // todo refactor to use setServers
+    this.setServer(serverUrl)
     title = project.name
     version = project.version.toString()
     format = "yaml"
@@ -43,55 +50,31 @@ openapi3 {
 postman {
     title = project.name
     version = project.version.toString()
-    baseUrl = "http://localhost:8080"
+    baseUrl = serverUrl
     outputDirectory = "src/main/resources/static/"
     outputFileNamePrefix = "postman"
 }
 
+/** generate swagger ui */
 swaggerSources {
+    /** generateSwaggerUIApi */
     register("api") {
         setInputFile(file("$projectDir/src/main/resources/static/openapi3.yaml"))
     }
 }
 
-tasks.withType(GenerateSwaggerUI::class) {
-    dependsOn("openapi3")
-}
-
-tasks.register("generateApiSwaggerUI", Copy::class) {
-//    dependsOn("generateSwaggerUI")
+/**
+ * generate static swagger ui <br/>
+ * need snippet to generate swagger ui
+ * */
+tasks.register("generateStaticSwaggerUIApi", Copy::class) {
+    /** generateSwaggerUIApi */
     val generateSwaggerUISampleTask = tasks.named("generateSwaggerUIApi", GenerateSwaggerUI::class).get()
+
+    /** copy */
     from(generateSwaggerUISampleTask.outputDir)
     into("$projectDir/src/main/resources/static/docs/swagger-ui")
-    doLast {
-        val swaggerSpecSource = "$projectDir/src/main/resources/static/docs/swagger-ui/swagger-spec.js"
-        file(swaggerSpecSource).writeText(
-            file(swaggerSpecSource).readText().replace(
-                "operationId\" : \"PutImageApi\",",
-                "operationId\" : \"PutImageApi\",\n" +
-                    putImageRequestScriptSource
-            )
-        )
-    }
 }
-
-val putImageRequestScriptSource = "" +
-    "        \"requestBody\" : {\n" +
-    "            \"content\" : {\n" +
-    "                \"multipart/form-data\" : {\n" +
-    "                    \"schema\" : {\n" +
-    "                        \"type\" : \"object\",\n" +
-    "                        \"properties\" : {\n" +
-    "                            \"source\" : {\n" +
-    "                                \"type\" : \"string\",\n" +
-    "                                \"format\" : \"binary\"\n" +
-    "                            }\n" +
-    "                        }\n" +
-    "\n" +
-    "                    }\n" +
-    "                }\n" +
-    "            }\n" +
-    "        },"
 
 val imageName = project.hasProperty("imageName").let {
     if (it) {
@@ -100,6 +83,7 @@ val imageName = project.hasProperty("imageName").let {
         "api"
     }
 }
+
 val releaseVersion = project.hasProperty("releaseVersion").let {
     if (it) {
         project.property("releaseVersion") as String
@@ -110,7 +94,6 @@ val releaseVersion = project.hasProperty("releaseVersion").let {
 
 tasks.register("buildDockerImage") {
     dependsOn("bootJar")
-    dependsOn("generateApiSwaggerUI")
 
     doLast {
         exec {
