@@ -37,7 +37,7 @@ jobs:
         uses: hashicorp/terraform-github-actions@master
         with:
           tf_actions_version: 0.3.0
-          tf_actions_subcommand: "plan"
+          tf_actions_subcommand: "plan -input=false"
           tf_actions_comment: "true"
           tf_actions_working_dir: ${{ env.working-directory }}
           tf_actions_vars: |
@@ -49,13 +49,12 @@ jobs:
             email_username=${{ secrets.EMAIL_USERNAME }}
             email_password=${{ secrets.EMAIL_PASSWORD }}
             webhook_discord=${{ secrets.WEBHOOK_DISCORD }}
-            input=false
 
       - name: Terraform Apply
         uses: hashicorp/terraform-github-actions@master
         with:
           tf_actions_version: 0.3.0
-          tf_actions_subcommand: "apply"
+          tf_actions_subcommand: "apply -input=false"
           tf_actions_comment: "true"
           tf_actions_working_dir: ${{ env.working-directory }}
           tf_actions_vars: |
