@@ -34,26 +34,35 @@ jobs:
         run: terraform fmt -check
 
       - name: Terraform Plan
-        working-directory: ${{ env.working-directory }}
-        run: terraform plan --var=aws_root_arn=${{ secrets.AWS_ROOT_ARN }} \
-          --var=aws_access_key=${{ secrets.AWS_ACCESS_KEY }} \
-          --var=aws_secret_key=${{ secrets.AWS_SECRET_SECRET_KEY }} \
-          --var=aws_rds_password=${{ secrets.AWS_RDS_PASSWORD }} \
-          --var=fe_origin=${{ secrets.FE_ORIGIN }} \
-          --var=email_username=${{ secrets.EMAIL_USERNAME }} \
-          --var=email_password=${{ secrets.EMAIL_PASSWORD }} \
-          --var=webhook_discord=${{ secrets.WEBHOOK_DISCORD }} \
-          -input=false
+        uses: hashicorp/terraform-github-actions@v2
+        with:
+          tf_actions_version: 0.3.0
+          tf_actions_subcommand: "plan"
+          tf_actions_comment: "true"
+          tf_actions_working_dir: ${{ env.working-directory }}
+          tf_actions_vars: |
+            aws_root_arn=${{ secrets.AWS_ROOT_ARN }}
+            aws_access_key=${{ secrets.AWS_ACCESS_KEY }}
+            aws_secret_key=${{ secrets.AWS_SECRET_SECRET_KEY }}
+            aws_rds_password=${{ secrets.AWS_RDS_PASSWORD }}
+            fe_origin=${{ secrets.FE_ORIGIN }}
+            email_username=${{ secrets.EMAIL_USERNAME }}
+            email_password=${{ secrets.EMAIL_PASSWORD }}
+            webhook_discord=${{ secrets.WEBHOOK_DISCORD }}
 
       - name: Terraform Apply
-        working-directory: ${{ env.working-directory }}
-        if: github.ref == 'refs/heads/infra/main' && github.event_name == 'push'
-        run: terraform apply -auto-approve --var=aws_root_arn=${{ secrets.AWS_ROOT_ARN }} \
-          --var=aws_access_key=${{ secrets.AWS_ACCESS_KEY }} \
-          --var=aws_secret_key=${{ secrets.AWS_SECRET_SECRET_KEY }} \
-          --var=aws_rds_password=${{ secrets.AWS_RDS_PASSWORD }} \
-          --var=fe_origin=${{ secrets.FE_ORIGIN }} \
-          --var=email_username=${{ secrets.EMAIL_USERNAME }} \
-          --var=email_password=${{ secrets.EMAIL_PASSWORD }} \
-          --var=webhook_discord=${{ secrets.WEBHOOK_DISCORD }} \
-          -input=false
+        uses: hashicorp/terraform-github-actions@v2
+        with:
+          tf_actions_version: 0.3.0
+          tf_actions_subcommand: "apply"
+          tf_actions_comment: "true"
+          tf_actions_working_dir: ${{ env.working-directory }}
+          tf_actions_vars: |
+            aws_root_arn=${{ secrets.AWS_ROOT_ARN }}
+            aws_access_key=${{ secrets.AWS_ACCESS_KEY }}
+            aws_secret_key=${{ secrets.AWS_SECRET_SECRET_KEY }}
+            aws_rds_password=${{ secrets.AWS_RDS_PASSWORD }}
+            fe_origin=${{ secrets.FE_ORIGIN }}
+            email_username=${{ secrets.EMAIL_USERNAME }}
+            email_password=${{ secrets.EMAIL_PASSWORD }}
+            webhook_discord=${{ secrets.WEBHOOK_DISCORD }}
