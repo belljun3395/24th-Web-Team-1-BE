@@ -49,6 +49,7 @@ jobs:
             email_username=${{ secrets.EMAIL_USERNAME }}
             email_password=${{ secrets.EMAIL_PASSWORD }}
             webhook_discord=${{ secrets.WEBHOOK_DISCORD }}
+            input=false
 
       - name: Terraform Apply
         uses: hashicorp/terraform-github-actions@master
@@ -66,3 +67,4 @@ jobs:
             email_username=${{ secrets.EMAIL_USERNAME }}
             email_password=${{ secrets.EMAIL_PASSWORD }}
             webhook_discord=${{ secrets.WEBHOOK_DISCORD }}
+            input=false
