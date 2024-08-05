@@ -33,17 +33,13 @@ jobs:
                   java-version: '17'
                   distribution: 'temurin'
 
-    jooq-codegen:
+    generate-and-upload-explain-docs:
         runs-on: ubuntu-latest
         needs: setup-java
         steps:
-            - name: Jooq Code Generation
-              run: ./gradlew --info jooqCodegenAll
+            -   name: Jooq Code Generation
+                run: ./gradlew --info jooqCodegenAll
 
-    generate-and-upload-explain-docs:
-        runs-on: ubuntu-latest
-        needs: jooq-codegen
-        steps:
             - name: Generate Explain Docs
               run: |
                   ./gradlew --info api-repo:generateExplainDocs

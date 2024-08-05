@@ -37,17 +37,13 @@ jobs:
                   java-version: '17'
                   distribution: 'temurin'
 
-    jooq-codegen:
+    test:
         runs-on: ubuntu-latest
         needs: setup-java
         steps:
             - name: Jooq Code Generation
               run: ./gradlew --info jooqCodegenAll
 
-    test:
-        runs-on: ubuntu-latest
-        needs: jooq-codegen
-        steps:
             - name: Test with Gradle
               run: ./gradlew --info test
 
@@ -55,6 +51,8 @@ jobs:
         runs-on: ubuntu-latest
         needs: test
         steps:
+            - name: Jooq Code Generation
+              run: ./gradlew --info jooqCodegenAll
             - name: Build with Gradle
               run: ./gradlew --info api:build -x test
 
