@@ -2,7 +2,8 @@ name: Integration Test
 
 on:
     pull_request:
-        branches: [ "main" ]
+        types: [opened]
+        branches: [ "main", "dev" ]
     workflow_dispatch:
 
 permissions:
