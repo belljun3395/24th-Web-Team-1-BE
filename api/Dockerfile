@@ -5,7 +5,7 @@ RUN mkdir -p /logs
 ENV	PROFILE default
 ENV TZ=Asia/Seoul
 ENV PINPOINT_PROFILES "release"
-ENV PINPOINT_JAR "pinpoint-bootstrap-3.0.0jar"
+ENV PINPOINT_JAR "pinpoint-bootstrap-3.0.0.jar"
 
 EXPOSE 8080
 
