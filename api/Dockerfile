@@ -14,4 +14,6 @@ ENV DD_VERSION=${RELEASE_VERSION}
 ARG JAR_FILE="build/libs/api.jar"
 COPY ${JAR_FILE} app.jar
 
-ENTRYPOINT java -XX:MaxGCPauseMillis=100 -XX:InitialRAMPercentage=50.0 -XX:MaxRAMPercentage=80.0 -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005 $JAVA_OPTS -jar app.jar
+VOLUME /pinpoint-agent
+
+ENTRYPOINT java -XX:MaxGCPauseMillis=100 -XX:InitialRAMPercentage=50.0 -XX:MaxRAMPercentage=80.0 -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005 $JAVA_OPTS -jar -javaagent:/pinpoint-agent/$PINPOINT_JAR -Dpinpoint.agentId=few-api-$PROFILE -Dpinpoint.applicationName=few-api-$PROFILE -Dpinpoint.profiler.profiles.active=release app.jar
