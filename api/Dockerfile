@@ -19,4 +19,5 @@ COPY ${JAR_FILE} app.jar
 
 VOLUME /pinpoint-agent
 
+
 ENTRYPOINT java -XX:MaxGCPauseMillis=100 -XX:InitialRAMPercentage=50.0 -XX:MaxRAMPercentage=80.0 -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005 $JAVA_OPTS -jar -javaagent:/pinpoint-agent/$PINPOINT_JAR -Dpinpoint.agentId=few-api-dev -Dpinpoint.applicationName=few-api-dev -Dpinpoint.profiler.profiles.active=$PINPOINT_PROFILES app.jar
