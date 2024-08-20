@@ -99,7 +99,7 @@ jobs:
 
             - name: API Test with Gradle
               run: |
-                  ./gradlew  api:test
+                  ./gradlew  api:test --parallel
 
     api-repo-test:
         needs: setup-test
@@ -134,7 +134,7 @@ jobs:
 
             -   name: API Repo Test with Gradle
                 run: |
-                    ./gradlew  api-repo:test
+                    ./gradlew  api-repo:test --parallel
 
     batch-test:
         needs: setup-test
@@ -169,4 +169,4 @@ jobs:
 
             -   name: Batch Test with Gradle
                 run: |
-                    ./gradlew  batch:test
+                    ./gradlew  batch:test --parallel
