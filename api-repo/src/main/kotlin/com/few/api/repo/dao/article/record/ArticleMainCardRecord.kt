@@ -1,5 +1,6 @@
 package com.few.api.repo.dao.article.record
 
+import com.few.api.repo.dao.member.support.WriterDescription
 import java.net.URL
 import java.time.LocalDateTime
 
@@ -11,9 +12,7 @@ data class ArticleMainCardRecord(
     val createdAt: LocalDateTime,
     val writerId: Long,
     val writerEmail: String,
-    val writerName: String,
-    val writerUrl: URL,
-    val writerImgUrl: URL,
+    val writerDescription: WriterDescription,
     val workbooks: List<WorkbookRecord> = emptyList(),
 ) {
     var content: String = ""
