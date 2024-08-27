@@ -5,8 +5,6 @@ import com.few.batch.config.BatchConfig
 import com.few.email.config.MailConfig
 import com.few.storage.document.config.DocumentStorageConfig
 import com.few.storage.image.config.ImageStorageConfig
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration
-import org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
@@ -24,7 +22,6 @@ import org.springframework.scheduling.annotation.EnableAsync
 )
 @EnableAsync
 @ConfigurationPropertiesScan(basePackages = [ApiConfig.BASE_PACKAGE])
-@EnableAutoConfiguration(exclude = [WebMvcAutoConfiguration::class])
 class ApiConfig {
     companion object {
         const val BASE_PACKAGE = "com.few.api"
