@@ -2,9 +2,9 @@ package com.few.api.domain.member.usecase
 
 import com.few.api.config.crypto.IdEncryption
 import com.few.api.domain.member.usecase.dto.TokenUseCaseIn
-import com.few.api.repo.dao.member.MemberDao
-import com.few.api.repo.dao.member.command.UpdateMemberTypeCommand
-import com.few.api.repo.dao.member.record.MemberEmailAndTypeRecord
+import com.few.repo.dao.member.MemberDao
+import com.few.repo.dao.member.command.UpdateMemberTypeCommand
+import com.few.repo.dao.member.record.MemberEmailAndTypeRecord
 import com.few.api.security.token.AuthToken
 import com.few.api.security.token.TokenGenerator
 import com.few.api.security.token.TokenResolver

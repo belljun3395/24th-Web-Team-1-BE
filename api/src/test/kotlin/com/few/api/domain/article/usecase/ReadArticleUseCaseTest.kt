@@ -7,8 +7,8 @@ import com.few.api.domain.article.service.ReadArticleWriterRecordService
 import com.few.api.domain.article.service.dto.BrowseArticleProblemsOutDto
 import com.few.api.domain.article.service.dto.ReadWriterOutDto
 import com.few.api.domain.article.usecase.dto.ReadArticleUseCaseIn
-import com.few.api.repo.dao.article.ArticleDao
-import com.few.api.repo.dao.article.record.SelectArticleRecord
+import com.few.repo.dao.article.ArticleDao
+import com.few.repo.dao.article.record.SelectArticleRecord
 import com.few.data.common.code.CategoryType
 import io.github.oshai.kotlinlogging.KotlinLogging
 import io.kotest.assertions.throwables.shouldThrow

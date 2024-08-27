@@ -1,7 +1,7 @@
 package com.few.api.domain.article.handler
 
-import com.few.api.repo.dao.article.ArticleViewCountDao
-import com.few.api.repo.dao.article.command.ArticleViewCountCommand
+import com.few.repo.dao.article.ArticleViewCountDao
+import com.few.repo.dao.article.command.ArticleViewCountCommand
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Isolation
 import org.springframework.transaction.annotation.Propagation

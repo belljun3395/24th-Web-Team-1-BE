@@ -10,8 +10,8 @@ import com.few.api.domain.article.service.ReadArticleWriterRecordService
 import com.few.api.domain.article.service.dto.BrowseArticleProblemIdsInDto
 import com.few.api.domain.article.service.dto.ReadWriterRecordInDto
 import com.few.api.exception.common.NotFoundException
-import com.few.api.repo.dao.article.ArticleDao
-import com.few.api.repo.dao.article.query.SelectArticleRecordQuery
+import com.few.repo.dao.article.ArticleDao
+import com.few.repo.dao.article.query.SelectArticleRecordQuery
 import com.few.data.common.code.CategoryType
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.stereotype.Component

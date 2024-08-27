@@ -1,9 +1,9 @@
 package com.few.api.domain.problem.usecase
 
-import com.few.api.repo.dao.problem.ProblemDao
-import com.few.api.repo.dao.problem.SubmitHistoryDao
-import com.few.api.repo.dao.problem.command.InsertSubmitHistoryCommand
-import com.few.api.repo.dao.problem.query.SelectProblemAnswerQuery
+import com.few.repo.dao.problem.ProblemDao
+import com.few.repo.dao.problem.SubmitHistoryDao
+import com.few.repo.dao.problem.command.InsertSubmitHistoryCommand
+import com.few.repo.dao.problem.query.SelectProblemAnswerQuery
 import com.few.api.domain.problem.usecase.dto.CheckProblemUseCaseIn
 import com.few.api.domain.problem.usecase.dto.CheckProblemUseCaseOut
 import com.few.api.exception.common.InsertException

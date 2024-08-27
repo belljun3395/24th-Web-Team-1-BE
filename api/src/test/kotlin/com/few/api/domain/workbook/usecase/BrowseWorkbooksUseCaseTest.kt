@@ -10,8 +10,8 @@ import com.few.api.domain.workbook.usecase.model.WorkBookWriter
 import com.few.api.domain.workbook.usecase.service.order.AuthMainViewWorkbookOrderDelegator
 import com.few.api.domain.workbook.usecase.service.order.BasicWorkbookOrderDelegator
 import com.few.api.domain.workbook.usecase.service.order.WorkbookOrderDelegatorExecutor
-import com.few.api.repo.dao.workbook.WorkbookDao
-import com.few.api.repo.dao.workbook.record.SelectWorkBookRecordWithSubscriptionCount
+import com.few.repo.dao.workbook.WorkbookDao
+import com.few.repo.dao.workbook.record.SelectWorkBookRecordWithSubscriptionCount
 import com.few.api.web.support.ViewCategory
 import com.few.api.web.support.WorkBookCategory
 import com.few.data.common.code.CategoryType

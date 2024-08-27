@@ -7,7 +7,7 @@ import com.few.api.domain.subscription.event.dto.WorkbookSubscriptionEvent
 import com.few.api.domain.subscription.service.WorkbookService
 import com.few.api.domain.subscription.service.dto.ReadWorkbookTitleInDto
 import com.few.api.exception.common.NotFoundException
-import com.few.api.repo.dao.subscription.SubscriptionDao
+import com.few.repo.dao.subscription.SubscriptionDao
 import org.springframework.context.event.EventListener
 import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Component

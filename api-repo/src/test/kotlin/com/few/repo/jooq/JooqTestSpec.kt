@@ -1,0 +1,13 @@
+package com.few.repo.jooq
+
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.few.repo.RepoTestContainerInitializer
+import com.few.repo.config.ApiRepoConfig
+import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.test.context.ActiveProfiles
+import org.springframework.test.context.ContextConfiguration
+
+@ActiveProfiles("new", "test")
+@SpringBootTest(classes = [ApiRepoConfig::class, ObjectMapper::class])
+@ContextConfiguration(initializers = [RepoTestContainerInitializer::class])
+abstract class JooqTestSpec

@@ -1,11 +1,11 @@
 package com.few.api.domain.problem.usecase
 
 import com.few.api.domain.problem.usecase.dto.ReadProblemUseCaseIn
-import com.few.api.repo.dao.problem.ProblemDao
-import com.few.api.repo.dao.problem.record.SelectProblemRecord
-import com.few.api.repo.dao.problem.support.Content
-import com.few.api.repo.dao.problem.support.Contents
-import com.few.api.repo.dao.problem.support.ContentsJsonMapper
+import com.few.repo.dao.problem.ProblemDao
+import com.few.repo.dao.problem.record.SelectProblemRecord
+import com.few.repo.dao.problem.support.Content
+import com.few.repo.dao.problem.support.Contents
+import com.few.repo.dao.problem.support.ContentsJsonMapper
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.shouldBe

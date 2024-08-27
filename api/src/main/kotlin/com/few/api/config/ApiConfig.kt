@@ -1,8 +1,8 @@
 package com.few.api.config
 
-import com.few.api.repo.config.ApiRepoConfig
 import com.few.batch.config.BatchConfig
 import com.few.email.config.MailConfig
+import com.few.repo.config.ApiRepoConfig
 import com.few.storage.document.config.DocumentStorageConfig
 import com.few.storage.image.config.ImageStorageConfig
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan
