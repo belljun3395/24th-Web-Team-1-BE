@@ -2,10 +2,10 @@ package com.few.api.domain.member.usecase
 
 import com.few.api.config.crypto.IdEncryption
 import com.few.api.domain.member.usecase.dto.SaveMemberUseCaseIn
-import com.few.api.repo.dao.member.MemberDao
-import com.few.api.repo.dao.member.command.UpdateDeletedMemberTypeCommand
-import com.few.api.repo.dao.member.query.SelectMemberByEmailNotConsiderDeletedAtQuery
-import com.few.api.repo.dao.member.record.MemberIdAndIsDeletedRecord
+import com.few.repo.dao.member.MemberDao
+import com.few.repo.dao.member.command.UpdateDeletedMemberTypeCommand
+import com.few.repo.dao.member.query.SelectMemberByEmailNotConsiderDeletedAtQuery
+import com.few.repo.dao.member.record.MemberIdAndIsDeletedRecord
 import com.few.email.service.member.SendAuthEmailService
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.BehaviorSpec

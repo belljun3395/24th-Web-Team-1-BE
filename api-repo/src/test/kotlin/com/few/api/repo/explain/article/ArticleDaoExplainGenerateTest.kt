@@ -1,15 +1,15 @@
 package com.few.api.repo.explain.article
 
-import com.few.api.repo.dao.article.ArticleDao
-import com.few.api.repo.dao.article.command.InsertFullArticleRecordCommand
-import com.few.api.repo.dao.article.query.SelectArticleIdByWorkbookIdAndDayQuery
-import com.few.api.repo.dao.article.query.SelectArticleRecordQuery
-import com.few.api.repo.dao.article.query.SelectWorkBookArticleRecordQuery
-import com.few.api.repo.dao.article.query.SelectWorkbookMappedArticleRecordsQuery
-import com.few.api.repo.explain.ExplainGenerator
-import com.few.api.repo.explain.InsertUpdateExplainGenerator
-import com.few.api.repo.explain.ResultGenerator
-import com.few.api.repo.jooq.JooqTestSpec
+import com.few.repo.dao.article.ArticleDao
+import com.few.repo.dao.article.command.InsertFullArticleRecordCommand
+import com.few.repo.dao.article.query.SelectArticleIdByWorkbookIdAndDayQuery
+import com.few.repo.dao.article.query.SelectArticleRecordQuery
+import com.few.repo.dao.article.query.SelectWorkBookArticleRecordQuery
+import com.few.repo.dao.article.query.SelectWorkbookMappedArticleRecordsQuery
+import com.few.repo.explain.ExplainGenerator
+import com.few.repo.explain.InsertUpdateExplainGenerator
+import com.few.repo.explain.ResultGenerator
+import com.few.repo.jooq.JooqTestSpec
 import com.few.data.common.code.CategoryType
 import io.github.oshai.kotlinlogging.KotlinLogging
 import jooq.jooq_dsl.tables.ArticleIfo

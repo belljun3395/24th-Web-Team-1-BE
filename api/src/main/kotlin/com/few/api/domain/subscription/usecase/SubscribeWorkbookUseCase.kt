@@ -1,13 +1,13 @@
 package com.few.api.domain.subscription.usecase
 
 import com.few.api.domain.subscription.event.dto.WorkbookSubscriptionEvent
-import com.few.api.repo.dao.subscription.SubscriptionDao
-import com.few.api.repo.dao.subscription.command.InsertWorkbookSubscriptionCommand
-import com.few.api.repo.dao.subscription.query.SelectAllWorkbookSubscriptionStatusNotConsiderDeletedAtQuery
+import com.few.repo.dao.subscription.SubscriptionDao
+import com.few.repo.dao.subscription.command.InsertWorkbookSubscriptionCommand
+import com.few.repo.dao.subscription.query.SelectAllWorkbookSubscriptionStatusNotConsiderDeletedAtQuery
 import com.few.api.domain.subscription.usecase.dto.SubscribeWorkbookUseCaseIn
 import com.few.api.exception.common.NotFoundException
 import com.few.api.exception.subscribe.SubscribeIllegalArgumentException
-import com.few.api.repo.dao.subscription.query.CountWorkbookMappedArticlesQuery
+import com.few.repo.dao.subscription.query.CountWorkbookMappedArticlesQuery
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional

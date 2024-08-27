@@ -1,10 +1,10 @@
 package com.few.api.repo.dao.problem
 
-import com.few.api.repo.dao.problem.query.SelectProblemsByArticleIdQuery
-import com.few.api.repo.dao.problem.support.Content
-import com.few.api.repo.dao.problem.support.Contents
-import com.few.api.repo.dao.problem.support.ContentsJsonMapper
-import com.few.api.repo.jooq.JooqTestSpec
+import com.few.repo.dao.problem.query.SelectProblemsByArticleIdQuery
+import com.few.repo.dao.problem.support.Content
+import com.few.repo.dao.problem.support.Contents
+import com.few.repo.dao.problem.support.ContentsJsonMapper
+import com.few.repo.jooq.JooqTestSpec
 import io.github.oshai.kotlinlogging.KotlinLogging
 import jooq.jooq_dsl.tables.Problem
 import org.jooq.DSLContext

@@ -8,8 +8,8 @@ import com.few.api.domain.admin.document.utils.ObjectPathGenerator
 import com.few.api.exception.common.ExternalIntegrationException
 import com.few.api.exception.common.InsertException
 
-import com.few.api.repo.dao.document.DocumentDao
-import com.few.api.repo.dao.document.command.InsertDocumentIfoCommand
+import com.few.repo.dao.document.DocumentDao
+import com.few.repo.dao.document.command.InsertDocumentIfoCommand
 import com.few.storage.document.service.ConvertDocumentService
 import com.few.storage.document.service.PutDocumentService
 import org.springframework.stereotype.Component

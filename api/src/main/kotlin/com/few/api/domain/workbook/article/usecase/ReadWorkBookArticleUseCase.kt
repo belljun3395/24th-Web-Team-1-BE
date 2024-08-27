@@ -10,8 +10,8 @@ import com.few.api.domain.workbook.article.dto.ReadWorkBookArticleUseCaseIn
 import com.few.api.domain.workbook.article.dto.ReadWorkBookArticleOut
 import com.few.api.domain.workbook.article.dto.WriterDetail
 import com.few.api.exception.common.NotFoundException
-import com.few.api.repo.dao.article.ArticleDao
-import com.few.api.repo.dao.article.query.SelectWorkBookArticleRecordQuery
+import com.few.repo.dao.article.ArticleDao
+import com.few.repo.dao.article.query.SelectWorkBookArticleRecordQuery
 import com.few.data.common.code.CategoryType
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.stereotype.Service

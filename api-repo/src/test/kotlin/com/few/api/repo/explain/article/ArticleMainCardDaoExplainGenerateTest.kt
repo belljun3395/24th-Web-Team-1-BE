@@ -1,13 +1,13 @@
 package com.few.api.repo.explain.article
 
-import com.few.api.repo.dao.article.ArticleMainCardDao
-import com.few.api.repo.dao.article.command.ArticleMainCardExcludeWorkbookCommand
-import com.few.api.repo.dao.article.command.UpdateArticleMainCardWorkbookCommand
-import com.few.api.repo.dao.article.command.WorkbookCommand
-import com.few.api.repo.explain.ExplainGenerator
-import com.few.api.repo.explain.InsertUpdateExplainGenerator
-import com.few.api.repo.explain.ResultGenerator
-import com.few.api.repo.jooq.JooqTestSpec
+import com.few.repo.dao.article.ArticleMainCardDao
+import com.few.repo.dao.article.command.ArticleMainCardExcludeWorkbookCommand
+import com.few.repo.dao.article.command.UpdateArticleMainCardWorkbookCommand
+import com.few.repo.dao.article.command.WorkbookCommand
+import com.few.repo.explain.ExplainGenerator
+import com.few.repo.explain.InsertUpdateExplainGenerator
+import com.few.repo.explain.ResultGenerator
+import com.few.repo.jooq.JooqTestSpec
 import com.few.data.common.code.CategoryType
 import io.github.oshai.kotlinlogging.KotlinLogging
 import jooq.jooq_dsl.tables.ArticleMainCard

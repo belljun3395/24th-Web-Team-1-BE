@@ -1,8 +1,8 @@
 package com.few.api.domain.subscription.service
 
 import com.few.api.domain.subscription.service.dto.ReadArticleIdByWorkbookIdAndDayDto
-import com.few.api.repo.dao.article.ArticleDao
-import com.few.api.repo.dao.article.query.SelectArticleIdByWorkbookIdAndDayQuery
+import com.few.repo.dao.article.ArticleDao
+import com.few.repo.dao.article.query.SelectArticleIdByWorkbookIdAndDayQuery
 import org.springframework.stereotype.Service
 
 @Service

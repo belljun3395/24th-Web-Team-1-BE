@@ -1,12 +1,12 @@
 package com.few.api.domain.problem.usecase
 
-import com.few.api.repo.dao.problem.ProblemDao
-import com.few.api.repo.dao.problem.query.SelectProblemQuery
+import com.few.repo.dao.problem.ProblemDao
+import com.few.repo.dao.problem.query.SelectProblemQuery
 import com.few.api.domain.problem.usecase.dto.ReadProblemUseCaseIn
 import com.few.api.domain.problem.usecase.dto.ReadProblemContentsUseCaseOutDetail
 import com.few.api.domain.problem.usecase.dto.ReadProblemUseCaseOut
 import com.few.api.exception.common.NotFoundException
-import com.few.api.repo.dao.problem.support.ContentsJsonMapper
+import com.few.repo.dao.problem.support.ContentsJsonMapper
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 

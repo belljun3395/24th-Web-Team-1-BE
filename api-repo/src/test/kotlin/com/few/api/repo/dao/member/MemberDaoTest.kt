@@ -1,10 +1,10 @@
 package com.few.api.repo.dao.member
 
-import com.few.api.repo.dao.member.query.SelectWriterQuery
-import com.few.api.repo.dao.member.query.SelectWritersQuery
-import com.few.api.repo.dao.member.support.WriterDescription
-import com.few.api.repo.dao.member.support.WriterDescriptionJsonMapper
-import com.few.api.repo.jooq.JooqTestSpec
+import com.few.repo.dao.member.query.SelectWriterQuery
+import com.few.repo.dao.member.query.SelectWritersQuery
+import com.few.repo.dao.member.support.WriterDescription
+import com.few.repo.dao.member.support.WriterDescriptionJsonMapper
+import com.few.repo.jooq.JooqTestSpec
 import com.few.data.common.code.MemberType
 import io.github.oshai.kotlinlogging.KotlinLogging
 import jooq.jooq_dsl.tables.Member

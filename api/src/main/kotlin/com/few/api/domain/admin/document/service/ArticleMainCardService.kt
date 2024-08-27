@@ -3,13 +3,13 @@ package com.few.api.domain.admin.document.service
 import com.few.api.domain.admin.document.service.dto.AppendWorkbookToArticleMainCardInDto
 import com.few.api.domain.admin.document.service.dto.InitializeArticleMainCardInDto
 import com.few.api.exception.common.NotFoundException
-import com.few.api.repo.dao.article.ArticleMainCardDao
-import com.few.api.repo.dao.article.command.ArticleMainCardExcludeWorkbookCommand
-import com.few.api.repo.dao.article.command.UpdateArticleMainCardWorkbookCommand
-import com.few.api.repo.dao.article.command.WorkbookCommand
-import com.few.api.repo.dao.article.record.ArticleMainCardRecord
-import com.few.api.repo.dao.workbook.WorkbookDao
-import com.few.api.repo.dao.workbook.query.SelectWorkBookRecordQuery
+import com.few.repo.dao.article.ArticleMainCardDao
+import com.few.repo.dao.article.command.ArticleMainCardExcludeWorkbookCommand
+import com.few.repo.dao.article.command.UpdateArticleMainCardWorkbookCommand
+import com.few.repo.dao.article.command.WorkbookCommand
+import com.few.repo.dao.article.record.ArticleMainCardRecord
+import com.few.repo.dao.workbook.WorkbookDao
+import com.few.repo.dao.workbook.query.SelectWorkBookRecordQuery
 import org.springframework.stereotype.Service
 
 @Service

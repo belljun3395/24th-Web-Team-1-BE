@@ -5,8 +5,8 @@ import com.few.api.domain.workbook.service.WorkbookMemberService
 import com.few.api.domain.workbook.service.dto.WorkBookArticleOutDto
 import com.few.api.domain.workbook.service.dto.WriterOutDto
 import com.few.api.domain.workbook.usecase.dto.ReadWorkbookUseCaseIn
-import com.few.api.repo.dao.workbook.WorkbookDao
-import com.few.api.repo.dao.workbook.record.SelectWorkBookRecord
+import com.few.repo.dao.workbook.WorkbookDao
+import com.few.repo.dao.workbook.record.SelectWorkBookRecord
 import com.few.data.common.code.CategoryType
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.BehaviorSpec

@@ -6,8 +6,8 @@ import com.few.api.domain.workbook.service.*
 import com.few.api.domain.workbook.service.dto.BrowseWorkbookArticlesInDto
 import com.few.api.domain.workbook.service.dto.BrowseWriterRecordsInDto
 import com.few.api.exception.common.NotFoundException
-import com.few.api.repo.dao.workbook.WorkbookDao
-import com.few.api.repo.dao.workbook.query.SelectWorkBookRecordQuery
+import com.few.repo.dao.workbook.WorkbookDao
+import com.few.repo.dao.workbook.query.SelectWorkBookRecordQuery
 import com.few.data.common.code.CategoryType
 import org.springframework.stereotype.Component
 

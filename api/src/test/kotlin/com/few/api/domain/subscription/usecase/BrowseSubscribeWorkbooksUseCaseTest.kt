@@ -3,8 +3,8 @@ package com.few.api.domain.subscription.usecase
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.few.api.domain.subscription.service.SubscriptionArticleService
 import com.few.api.domain.subscription.usecase.dto.BrowseSubscribeWorkbooksUseCaseIn
-import com.few.api.repo.dao.subscription.SubscriptionDao
-import com.few.api.repo.dao.subscription.record.MemberWorkbookSubscriptionStatusRecord
+import com.few.repo.dao.subscription.SubscriptionDao
+import com.few.repo.dao.subscription.record.MemberWorkbookSubscriptionStatusRecord
 import com.few.api.web.support.WorkBookStatus
 import io.github.oshai.kotlinlogging.KotlinLogging
 import io.kotest.core.spec.style.BehaviorSpec

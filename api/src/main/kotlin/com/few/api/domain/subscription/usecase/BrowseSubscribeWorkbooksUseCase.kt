@@ -6,10 +6,10 @@ import com.few.api.domain.subscription.service.dto.ReadArticleIdByWorkbookIdAndD
 import com.few.api.domain.subscription.usecase.dto.BrowseSubscribeWorkbooksUseCaseIn
 import com.few.api.domain.subscription.usecase.dto.BrowseSubscribeWorkbooksUseCaseOut
 import com.few.api.domain.subscription.usecase.dto.SubscribeWorkbookDetail
-import com.few.api.repo.dao.subscription.SubscriptionDao
-import com.few.api.repo.dao.subscription.query.CountAllWorkbooksSubscription
-import com.few.api.repo.dao.subscription.query.SelectAllMemberWorkbookActiveSubscription
-import com.few.api.repo.dao.subscription.query.SelectAllMemberWorkbookInActiveSubscription
+import com.few.repo.dao.subscription.SubscriptionDao
+import com.few.repo.dao.subscription.query.CountAllWorkbooksSubscription
+import com.few.repo.dao.subscription.query.SelectAllMemberWorkbookActiveSubscription
+import com.few.repo.dao.subscription.query.SelectAllMemberWorkbookInActiveSubscription
 import com.few.api.web.support.WorkBookStatus
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional

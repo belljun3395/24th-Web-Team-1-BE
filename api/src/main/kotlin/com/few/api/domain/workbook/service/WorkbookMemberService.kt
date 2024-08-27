@@ -5,9 +5,9 @@ import com.few.api.domain.workbook.usecase.dto.WriterDetail
 import com.few.api.domain.workbook.service.dto.BrowseWriterRecordsInDto
 import com.few.api.domain.workbook.service.dto.WriterMappedWorkbookOutDto
 import com.few.api.domain.workbook.service.dto.WriterOutDto
-import com.few.api.repo.dao.member.MemberDao
-import com.few.api.repo.dao.member.query.BrowseWorkbookWritersQuery
-import com.few.api.repo.dao.member.query.SelectWritersQuery
+import com.few.repo.dao.member.MemberDao
+import com.few.repo.dao.member.query.BrowseWorkbookWritersQuery
+import com.few.repo.dao.member.query.SelectWritersQuery
 import org.springframework.stereotype.Service
 
 fun List<WriterOutDto>.toWriterDetails(): List<WriterDetail> {
