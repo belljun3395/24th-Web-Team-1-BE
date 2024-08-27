@@ -1,7 +1,7 @@
 package com.few.api.repo.dao.workbook
 
-import com.few.api.repo.dao.workbook.query.SelectWorkBookRecordQuery
-import com.few.api.repo.jooq.JooqTestSpec
+import com.few.repo.dao.workbook.query.SelectWorkBookRecordQuery
+import com.few.repo.jooq.JooqTestSpec
 import com.few.data.common.code.CategoryType
 import jooq.jooq_dsl.tables.Workbook
 import org.jooq.DSLContext

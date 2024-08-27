@@ -3,8 +3,8 @@ package com.few.api.domain.workbook.service
 import com.few.api.domain.workbook.usecase.dto.ArticleDetail
 import com.few.api.domain.workbook.service.dto.BrowseWorkbookArticlesInDto
 import com.few.api.domain.workbook.service.dto.WorkBookArticleOutDto
-import com.few.api.repo.dao.article.ArticleDao
-import com.few.api.repo.dao.article.query.SelectWorkbookMappedArticleRecordsQuery
+import com.few.repo.dao.article.ArticleDao
+import com.few.repo.dao.article.query.SelectWorkbookMappedArticleRecordsQuery
 import org.springframework.stereotype.Service
 
 fun List<WorkBookArticleOutDto>.writerIds(): List<Long> {

@@ -1,0 +1,10 @@
+package com.few.repo.dao.member.record
+
+import java.net.URL
+
+data class WriterRecord(
+    val writerId: Long,
+    val name: String,
+    val url: URL,
+    val imageUrl: URL,
+)

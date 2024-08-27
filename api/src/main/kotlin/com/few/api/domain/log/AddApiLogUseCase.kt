@@ -1,8 +1,8 @@
 package com.few.api.domain.log
 
 import com.few.api.domain.log.dto.AddApiLogUseCaseIn
-import com.few.api.repo.dao.log.LogIfoDao
-import com.few.api.repo.dao.log.command.InsertLogCommand
+import com.few.repo.dao.log.LogIfoDao
+import com.few.repo.dao.log.command.InsertLogCommand
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 

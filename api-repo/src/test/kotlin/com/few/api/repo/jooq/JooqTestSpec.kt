@@ -1,8 +1,8 @@
 package com.few.api.repo.jooq
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.few.api.repo.RepoTestContainerInitializer
-import com.few.api.repo.config.ApiRepoConfig
+import com.few.repo.RepoTestContainerInitializer
+import com.few.repo.config.ApiRepoConfig
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.ContextConfiguration

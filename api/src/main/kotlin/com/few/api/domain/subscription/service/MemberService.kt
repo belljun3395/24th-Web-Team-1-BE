@@ -4,9 +4,9 @@ import com.few.api.domain.subscription.service.dto.InsertMemberInDto
 import com.few.api.domain.subscription.service.dto.MemberIdOutDto
 import com.few.api.domain.subscription.service.dto.ReadMemberIdInDto
 import com.few.api.exception.common.InsertException
-import com.few.api.repo.dao.member.MemberDao
-import com.few.api.repo.dao.member.command.InsertMemberCommand
-import com.few.api.repo.dao.member.query.SelectMemberByEmailQuery
+import com.few.repo.dao.member.MemberDao
+import com.few.repo.dao.member.command.InsertMemberCommand
+import com.few.repo.dao.member.query.SelectMemberByEmailQuery
 import org.springframework.stereotype.Service
 
 @Service

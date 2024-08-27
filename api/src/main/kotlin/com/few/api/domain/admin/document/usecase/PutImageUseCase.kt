@@ -7,8 +7,8 @@ import com.few.api.domain.admin.document.service.dto.GetUrlInDto
 import com.few.api.domain.admin.document.utils.ObjectPathGenerator
 import com.few.api.exception.common.ExternalIntegrationException
 import com.few.api.exception.common.InsertException
-import com.few.api.repo.dao.image.ImageDao
-import com.few.api.repo.dao.image.command.InsertImageIfoCommand
+import com.few.repo.dao.image.ImageDao
+import com.few.repo.dao.image.command.InsertImageIfoCommand
 import com.few.storage.image.service.PutImageService
 import com.sksamuel.scrimage.ImmutableImage
 import com.sksamuel.scrimage.webp.WebpWriter

@@ -1,9 +1,9 @@
 package com.few.api.repo.dao.article
 
-import com.few.api.repo.dao.article.query.SelectArticleRecordQuery
-import com.few.api.repo.dao.article.query.SelectWorkBookArticleRecordQuery
-import com.few.api.repo.dao.article.query.SelectWorkbookMappedArticleRecordsQuery
-import com.few.api.repo.jooq.JooqTestSpec
+import com.few.repo.dao.article.query.SelectArticleRecordQuery
+import com.few.repo.dao.article.query.SelectWorkBookArticleRecordQuery
+import com.few.repo.dao.article.query.SelectWorkbookMappedArticleRecordsQuery
+import com.few.repo.jooq.JooqTestSpec
 import com.few.data.common.code.CategoryType
 import io.github.oshai.kotlinlogging.KotlinLogging
 import jooq.jooq_dsl.tables.ArticleIfo

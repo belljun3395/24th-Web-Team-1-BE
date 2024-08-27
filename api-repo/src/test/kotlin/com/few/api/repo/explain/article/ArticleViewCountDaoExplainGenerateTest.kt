@@ -1,14 +1,14 @@
 package com.few.api.repo.explain.article
 
-import com.few.api.repo.dao.article.ArticleViewCountDao
-import com.few.api.repo.dao.article.command.ArticleViewCountCommand
-import com.few.api.repo.dao.article.query.ArticleViewCountQuery
-import com.few.api.repo.dao.article.query.SelectArticlesOrderByViewsQuery
-import com.few.api.repo.dao.article.query.SelectRankByViewsQuery
-import com.few.api.repo.explain.ExplainGenerator
-import com.few.api.repo.explain.InsertUpdateExplainGenerator
-import com.few.api.repo.explain.ResultGenerator
-import com.few.api.repo.jooq.JooqTestSpec
+import com.few.repo.dao.article.ArticleViewCountDao
+import com.few.repo.dao.article.command.ArticleViewCountCommand
+import com.few.repo.dao.article.query.ArticleViewCountQuery
+import com.few.repo.dao.article.query.SelectArticlesOrderByViewsQuery
+import com.few.repo.dao.article.query.SelectRankByViewsQuery
+import com.few.repo.explain.ExplainGenerator
+import com.few.repo.explain.InsertUpdateExplainGenerator
+import com.few.repo.explain.ResultGenerator
+import com.few.repo.jooq.JooqTestSpec
 import com.few.data.common.code.CategoryType
 import io.github.oshai.kotlinlogging.KotlinLogging
 import jooq.jooq_dsl.tables.ArticleViewCount

@@ -12,8 +12,8 @@ import com.few.api.domain.workbook.usecase.model.*
 import com.few.api.domain.workbook.usecase.service.order.AuthMainViewWorkbookOrderDelegator
 import com.few.api.domain.workbook.usecase.service.order.BasicWorkbookOrderDelegator
 import com.few.api.domain.workbook.usecase.service.order.WorkbookOrderDelegatorExecutor
-import com.few.api.repo.dao.workbook.WorkbookDao
-import com.few.api.repo.dao.workbook.query.BrowseWorkBookQueryWithSubscriptionCount
+import com.few.repo.dao.workbook.WorkbookDao
+import com.few.repo.dao.workbook.query.BrowseWorkBookQueryWithSubscriptionCount
 import com.few.api.web.support.ViewCategory
 import com.few.data.common.code.CategoryType
 import org.springframework.stereotype.Component

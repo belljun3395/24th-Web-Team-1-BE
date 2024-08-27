@@ -1,14 +1,14 @@
 package com.few.api.repo.explain.workbook
 
-import com.few.api.repo.dao.workbook.WorkbookDao
-import com.few.api.repo.dao.workbook.command.InsertWorkBookCommand
-import com.few.api.repo.dao.workbook.command.MapWorkBookToArticleCommand
-import com.few.api.repo.dao.workbook.query.BrowseWorkBookQueryWithSubscriptionCount
-import com.few.api.repo.dao.workbook.query.SelectWorkBookRecordQuery
-import com.few.api.repo.explain.ExplainGenerator
-import com.few.api.repo.explain.InsertUpdateExplainGenerator
-import com.few.api.repo.explain.ResultGenerator
-import com.few.api.repo.jooq.JooqTestSpec
+import com.few.repo.dao.workbook.WorkbookDao
+import com.few.repo.dao.workbook.command.InsertWorkBookCommand
+import com.few.repo.dao.workbook.command.MapWorkBookToArticleCommand
+import com.few.repo.dao.workbook.query.BrowseWorkBookQueryWithSubscriptionCount
+import com.few.repo.dao.workbook.query.SelectWorkBookRecordQuery
+import com.few.repo.explain.ExplainGenerator
+import com.few.repo.explain.InsertUpdateExplainGenerator
+import com.few.repo.explain.ResultGenerator
+import com.few.repo.jooq.JooqTestSpec
 import com.few.data.common.code.CategoryType
 import io.github.oshai.kotlinlogging.KotlinLogging
 import jooq.jooq_dsl.tables.*
