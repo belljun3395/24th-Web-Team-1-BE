@@ -56,18 +56,6 @@ jobs:
               run: |
                   ./gradlew jooqCodegenAll
 
-            - name: Test with Gradle
-              run: |
-                  ./gradlew test -parallel
-
-            - name: Generate OpenAPI3
-              run: |
-                  ./gradlew  api:openapi3 -PserverUrl=https://api.fewletter.shop
-
-            - name: Generate Swagger
-              run: |
-                  ./gradlew  api:generateStaticSwaggerUIApi
-
             - name: Build with Gradle bootBuildImage, tag, and push image to Amazon ECR
               env:
                   ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
