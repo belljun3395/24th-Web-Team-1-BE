@@ -5,7 +5,6 @@ import com.few.email.config.MailConfig
 import com.few.repo.config.ApiRepoConfig
 import com.few.storage.document.config.DocumentStorageConfig
 import com.few.storage.image.config.ImageStorageConfig
-import org.springframework.boot.context.properties.ConfigurationPropertiesScan
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Import
@@ -21,7 +20,6 @@ import org.springframework.scheduling.annotation.EnableAsync
     DocumentStorageConfig::class
 )
 @EnableAsync
-@ConfigurationPropertiesScan(basePackages = [ApiConfig.BASE_PACKAGE])
 class ApiConfig {
     companion object {
         const val BASE_PACKAGE = "com.few.api"
