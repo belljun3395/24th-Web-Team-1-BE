@@ -6,7 +6,7 @@ object DependencyVersion {
     const val KTLINT = "11.6.1"
 
     /** springBootVersion */
-    const val SPRING_BOOT = "3.2.5"
+    const val SPRING_BOOT = "3.1.5"
 
     /** springDependencyManagementVersion */
     const val SPRING_DEPENDENCY_MANAGEMENT = "1.1.5"
