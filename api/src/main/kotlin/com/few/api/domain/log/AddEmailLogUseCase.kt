@@ -40,7 +40,7 @@ class AddEmailLogUseCase(
                 sendType = record.sendType
             )
         ).let {
-            TODO("다른 이벤트는 필요시 추가한다.")
+//            TODO("다른 이벤트는 필요시 추가한다.")
         }
     }
 }
