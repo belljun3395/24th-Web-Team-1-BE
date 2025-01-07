@@ -1,0 +1,20 @@
+server:
+    port: 8081
+
+spring:
+    profiles:
+        group:
+            local:
+                # module
+                - security-local
+                - web-local
+                - email-local
+                # domain
+                - crm-local
+            prd:
+                # module
+                - security-prd
+                - web-prd
+                - email-prd
+                # domain
+                - crm-prd

@@ -1,5 +1,6 @@
 import org.hidetake.gradle.swagger.generator.GenerateSwaggerUI
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import java.util.*
 
 plugins {
     kotlin("jvm") version DependencyVersion.KOTLIN
@@ -265,4 +266,40 @@ tasks.named("gitExecutableHooks").configure {
 
 tasks.named("clean").configure {
     dependsOn("gitExecutableHooks")
+}
+
+val imageName =
+    project.hasProperty("imageName").let {
+        if (it) {
+            project.property("imageName") as String
+        } else {
+            "fewletter/api"
+        }
+    }
+val releaseVersion =
+    project.hasProperty("releaseVersion").let {
+        if (it) {
+            project.property("releaseVersion") as String
+        } else {
+            Random().nextInt(90000) + 10000
+        }
+    }
+
+tasks.register("buildEcsDockerImage") {
+    dependsOn("build")
+
+    doLast {
+        exec {
+            workingDir(".")
+            commandLine(
+                "docker",
+                "build",
+                "-t",
+                imageName,
+                "--build-arg",
+                "RELEASE_VERSION=$releaseVersion",
+                '.',
+            )
+        }
+    }
 }

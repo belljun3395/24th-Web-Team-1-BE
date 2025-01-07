@@ -1,11 +1,3 @@
-tasks.getByName("bootJar") {
-    enabled = false
-}
-
-tasks.getByName("jar") {
-    enabled = true
-}
-
 plugins {
     id("com.vaadin") version DependencyVersion.VAADIN
 }
@@ -20,6 +12,9 @@ dependencies {
 
     /** jpa */
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+
+    /** mysql */
+    implementation("com.mysql:mysql-connector-j")
 
     /** aws - sqs */
     implementation("io.awspring.cloud:spring-cloud-aws-starter-sqs:${DependencyVersion.AWS_SQS}")
