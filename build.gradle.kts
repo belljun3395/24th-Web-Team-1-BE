@@ -286,7 +286,6 @@ val releaseVersion =
     }
 
 tasks.register("buildEcsDockerImage") {
-    dependsOn("build")
 
     doLast {
         exec {
