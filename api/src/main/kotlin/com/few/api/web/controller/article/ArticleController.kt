@@ -19,6 +19,10 @@ import com.few.api.web.support.method.UserArgument
 import com.few.api.web.support.method.UserArgumentDetails
 import com.few.data.common.code.CategoryType
 import jakarta.validation.constraints.Min
+import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.validation.annotation.Validated
@@ -79,33 +83,40 @@ class ArticleController(
             required = false,
             defaultValue = "-1"
         ) categoryCd: Byte,
-    ): ApiResponse<ApiResponse.SuccessBody<ReadArticlesResponse>> {
-        val useCaseOut =
-            browseArticlesUseCase.execute(ReadArticlesUseCaseIn(prevArticleId, categoryCd))
-
-        val articles: List<ReadArticleResponse> = useCaseOut.articles.map { a ->
-            ReadArticleResponse(
-                id = a.id,
-                title = a.title,
-                writer = WriterInfo(
-                    id = a.writer.id,
-                    name = a.writer.name,
-                    url = a.writer.url,
-                    imageUrl = a.writer.imageUrl
-                ),
-                mainImageUrl = a.mainImageUrl,
-                content = a.content,
-                problemIds = a.problemIds,
-                category = a.category,
-                createdAt = a.createdAt,
-                views = a.views,
-                workbooks = a.workbooks.map { WorkbookInfo(it.id, it.title) }
-            )
-        }.toList()
-
-        val response = ReadArticlesResponse(articles, useCaseOut.isLast)
-
-        return ApiResponseGenerator.success(response, HttpStatus.OK)
+    ): CompletableDeferred<ApiResponse<ApiResponse.SuccessBody<ReadArticlesResponse>>> {
+        val deferredResult = CompletableDeferred<ApiResponse<ApiResponse.SuccessBody<ReadArticlesResponse>>>()
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val useCaseOut = browseArticlesUseCase.execute(ReadArticlesUseCaseIn(prevArticleId, categoryCd))
+                val articles: List<ReadArticleResponse> =
+                    useCaseOut.articles
+                        .map { a ->
+                            ReadArticleResponse(
+                                id = a.id,
+                                title = a.title,
+                                writer =
+                                WriterInfo(
+                                    id = a.writer.id,
+                                    name = a.writer.name,
+                                    url = a.writer.url,
+                                    imageUrl = a.writer.imageUrl
+                                ),
+                                mainImageUrl = a.mainImageUrl,
+                                content = a.content,
+                                problemIds = a.problemIds,
+                                category = a.category,
+                                createdAt = a.createdAt,
+                                views = a.views,
+                                workbooks = a.workbooks.map { WorkbookInfo(it.id, it.title) }
+                            )
+                        }.toList()
+                val response = ReadArticlesResponse(articles, useCaseOut.isLast)
+                deferredResult.complete(ApiResponseGenerator.success(response, HttpStatus.OK))
+            } catch (e: Exception) {
+                deferredResult.completeExceptionally(e)
+            }
+        }
+        return deferredResult
     }
 
     @GetMapping("/categories")

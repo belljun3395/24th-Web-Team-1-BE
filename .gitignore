@@ -91,9 +91,9 @@ Footer
 *.rar
 
 # Jooq
-**/generated/
-*.log
-*.tmp
+#**/generated/
+#*.log
+#*.tmp
 
 # DB schema migration path (except data module)
 data/src/main/resources/**/*.sql

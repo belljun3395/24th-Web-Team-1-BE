@@ -1,6 +1,5 @@
 package com.few.api.repo.explain.article
 
-import com.few.api.repo.dao.article.ArticleMainCardDao
 import com.few.api.repo.dao.article.command.ArticleMainCardExcludeWorkbookCommand
 import com.few.api.repo.dao.article.command.UpdateArticleMainCardWorkbookCommand
 import com.few.api.repo.dao.article.command.WorkbookCommand
