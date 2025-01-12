@@ -3,7 +3,7 @@ name: DEV - Deploy to Amazon ECS DEV
 on:
     push:
         branches:
-            - dev
+            - dev2
     workflow_dispatch:
 env:
     AWS_REGION: ap-northeast-2
