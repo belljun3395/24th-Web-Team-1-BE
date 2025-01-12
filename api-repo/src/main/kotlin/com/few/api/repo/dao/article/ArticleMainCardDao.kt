@@ -6,9 +6,8 @@ import com.few.api.repo.dao.article.record.ArticleMainCardRecord
 import com.few.api.repo.dao.article.support.ArticleMainCardMapper
 import com.few.api.repo.dao.article.support.CommonJsonMapper
 import jooq.jooq_dsl.tables.ArticleMainCard.ARTICLE_MAIN_CARD
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.future.await
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.reactive.awaitFirst
 import org.jooq.*
 import org.jooq.impl.DSL.*
 import org.springframework.stereotype.Repository
@@ -36,32 +35,28 @@ class ArticleMainCardDao(
             .toSet()
 
     suspend fun selectArticleMainCardsRecordAsync(articleId: Long): ArticleMainCardRecord? =
-        withContext(Dispatchers.IO) {
-            dslContext
-                .select(
-                    ARTICLE_MAIN_CARD.ID.`as`(ArticleMainCardRecord::articleId.name),
-                    ARTICLE_MAIN_CARD.TITLE.`as`(ArticleMainCardRecord::articleTitle.name),
-                    ARTICLE_MAIN_CARD.MAIN_IMAGE_URL.`as`(ArticleMainCardRecord::mainImageUrl.name),
-                    ARTICLE_MAIN_CARD.CATEGORY_CD.`as`(ArticleMainCardRecord::categoryCd.name),
-                    ARTICLE_MAIN_CARD.CREATED_AT.`as`(ArticleMainCardRecord::createdAt.name),
-                    ARTICLE_MAIN_CARD.WRITER_ID.`as`(ArticleMainCardRecord::writerId.name),
-                    ARTICLE_MAIN_CARD.WRITER_EMAIL.`as`(ArticleMainCardRecord::writerEmail.name),
-                    jsonGetAttributeAsText(
-                        ARTICLE_MAIN_CARD.WRITER_DESCRIPTION,
-                        "name"
-                    ).`as`(ArticleMainCardRecord::writerName.name),
-                    jsonGetAttribute(ARTICLE_MAIN_CARD.WRITER_DESCRIPTION, "url").`as`(ArticleMainCardRecord::writerUrl.name),
-                    jsonGetAttribute(ARTICLE_MAIN_CARD.WRITER_DESCRIPTION, "imageUrl").`as`(ArticleMainCardRecord::writerImgUrl.name),
-                    ARTICLE_MAIN_CARD.WORKBOOKS.`as`(ArticleMainCardRecord::workbooks.name)
-                ).from(ARTICLE_MAIN_CARD)
-                .where(ARTICLE_MAIN_CARD.ID.eq(articleId))
-                .fetchAsync()
-                .await()
-                .map {
-                    articleMainCardMapper.map(it)
-                }
-                .firstOrNull()
-        }
+        dslContext
+            .select(
+                ARTICLE_MAIN_CARD.ID.`as`(ArticleMainCardRecord::articleId.name),
+                ARTICLE_MAIN_CARD.TITLE.`as`(ArticleMainCardRecord::articleTitle.name),
+                ARTICLE_MAIN_CARD.MAIN_IMAGE_URL.`as`(ArticleMainCardRecord::mainImageUrl.name),
+                ARTICLE_MAIN_CARD.CATEGORY_CD.`as`(ArticleMainCardRecord::categoryCd.name),
+                ARTICLE_MAIN_CARD.CREATED_AT.`as`(ArticleMainCardRecord::createdAt.name),
+                ARTICLE_MAIN_CARD.WRITER_ID.`as`(ArticleMainCardRecord::writerId.name),
+                ARTICLE_MAIN_CARD.WRITER_EMAIL.`as`(ArticleMainCardRecord::writerEmail.name),
+                jsonGetAttributeAsText(
+                    ARTICLE_MAIN_CARD.WRITER_DESCRIPTION,
+                    "name"
+                ).`as`(ArticleMainCardRecord::writerName.name),
+                jsonGetAttribute(ARTICLE_MAIN_CARD.WRITER_DESCRIPTION, "url").`as`(ArticleMainCardRecord::writerUrl.name),
+                jsonGetAttribute(ARTICLE_MAIN_CARD.WRITER_DESCRIPTION, "imageUrl").`as`(ArticleMainCardRecord::writerImgUrl.name),
+                ARTICLE_MAIN_CARD.WORKBOOKS.`as`(ArticleMainCardRecord::workbooks.name)
+            ).from(ARTICLE_MAIN_CARD)
+            .where(ARTICLE_MAIN_CARD.ID.eq(articleId))
+            .awaitFirst()
+            .map {
+                articleMainCardMapper.map(it)
+            }
 
     fun selectArticleMainCardsRecordQuery(articleIds: Set<Long>) =
         dslContext
