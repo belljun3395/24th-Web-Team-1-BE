@@ -24,9 +24,11 @@ import com.few.api.repo.dao.article.record.SelectArticleViewsRecord
 import com.few.data.common.code.CategoryType
 import jooq.jooq_dsl.tables.ArticleViewCount.ARTICLE_VIEW_COUNT
 import jooq.jooq_dsl.tables.SendArticleEventHistory.SEND_ARTICLE_EVENT_HISTORY
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.future.await
 import kotlinx.coroutines.reactive.awaitSingle
 import kotlinx.coroutines.reactor.awaitSingle
+import kotlinx.coroutines.withContext
 import org.jooq.DSLContext
 import org.jooq.impl.DSL.*
 import org.springframework.stereotype.Repository
@@ -100,9 +102,11 @@ class ArticleViewCountDao(
             .fetchOneInto(Long::class.java)
 
     suspend fun selectRankByViewsAsync(query: SelectRankByViewsQuery): Long? =
-        selectRankByViewsQuery(query)
-            .awaitSingle()
-            .into(Long::class.java)
+        withContext(Dispatchers.IO) {
+            selectRankByViewsQuery(query)
+                .awaitSingle()
+                .into(Long::class.java)
+        }
 
     fun selectRankByViewsQuery(query: SelectRankByViewsQuery) =
         dslContext
@@ -151,10 +155,12 @@ class ArticleViewCountDao(
             .fetchInto(SelectArticleViewsRecord::class.java)
 
     suspend fun selectArticlesOrderByViewsAsync(query: SelectArticlesOrderByViewsQuery): List<SelectArticleViewsRecord> =
-        selectArticlesOrderByViewsQuery(query)
-            .fetchAsync()
-            .await()
-            .map { it.into(SelectArticleViewsRecord::class.java) }
+        withContext(Dispatchers.IO) {
+            selectArticlesOrderByViewsQuery(query)
+                .fetchAsync()
+                .await()
+                .into(SelectArticleViewsRecord::class.java)
+        }
 
     fun selectArticlesOrderByViewsQuery(query: SelectArticlesOrderByViewsQuery) =
         dslContext

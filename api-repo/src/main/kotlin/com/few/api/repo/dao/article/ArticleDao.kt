@@ -8,7 +8,9 @@ import com.few.api.repo.dao.article.record.*
 import com.few.data.common.code.MemberType
 import jooq.jooq_dsl.tables.*
 import jooq.jooq_dsl.tables.MappingWorkbookArticle.MAPPING_WORKBOOK_ARTICLE
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.future.await
+import kotlinx.coroutines.withContext
 import org.jooq.*
 import org.jooq.impl.DSL
 import org.springframework.cache.annotation.Cacheable
@@ -132,19 +134,20 @@ class ArticleDao(
         selectArticleContentsQuery(articleIds)
             .fetchInto(SelectArticleContentsRecord::class.java)
 
-    @Cacheable(key = "#articleId", cacheManager = LOCAL_CM, cacheNames = [SELECT_ARTICLE_RECORD_CACHE])
     suspend fun selectArticleContentsAsync(articleId: Long): SelectArticleContentsRecord =
-        dslContext
-            .select(
-                ArticleIfo.ARTICLE_IFO.ARTICLE_MST_ID.`as`(SelectArticleContentsRecord::articleId.name),
-                ArticleIfo.ARTICLE_IFO.CONTENT.`as`(SelectArticleContentsRecord::content.name)
-            ).from(ArticleIfo.ARTICLE_IFO)
-            .where(ArticleIfo.ARTICLE_IFO.ARTICLE_MST_ID.eq(articleId))
-            .and(ArticleIfo.ARTICLE_IFO.DELETED_AT.isNull)
-            .fetchAsync()
-            .await()
-            .into(SelectArticleContentsRecord::class.java)
-            .first()
+        withContext(Dispatchers.IO) {
+            dslContext
+                .select(
+                    ArticleIfo.ARTICLE_IFO.ARTICLE_MST_ID.`as`(SelectArticleContentsRecord::articleId.name),
+                    ArticleIfo.ARTICLE_IFO.CONTENT.`as`(SelectArticleContentsRecord::content.name)
+                ).from(ArticleIfo.ARTICLE_IFO)
+                .where(ArticleIfo.ARTICLE_IFO.ARTICLE_MST_ID.eq(articleId))
+                .and(ArticleIfo.ARTICLE_IFO.DELETED_AT.isNull)
+                .fetchAsync()
+                .await()
+                .into(SelectArticleContentsRecord::class.java)
+                .first()
+        }
 
     fun selectArticleContentsQuery(articleIds: Set<Long>) =
         dslContext
