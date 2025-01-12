@@ -132,7 +132,7 @@ class ArticleDao(
         selectArticleContentsQuery(articleIds)
             .fetchInto(SelectArticleContentsRecord::class.java)
 
-//    @Cacheable(key = "#articleId", cacheManager = LOCAL_CM, cacheNames = [SELECT_ARTICLE_RECORD_CACHE])
+    @Cacheable(key = "#articleId", cacheManager = LOCAL_CM, cacheNames = [SELECT_ARTICLE_RECORD_CACHE])
     suspend fun selectArticleContentsAsync(articleId: Long): SelectArticleContentsRecord =
         dslContext
             .select(

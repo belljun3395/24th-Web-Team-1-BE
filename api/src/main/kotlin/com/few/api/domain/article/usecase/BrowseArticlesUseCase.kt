@@ -61,7 +61,7 @@ class BrowseArticlesUseCase(
             }
 
         val recordViewIds = articleViewsRecords.map { it.articleId }.toSet()
-        val articleMainCardRecords = articleMainCardDao.selectArticleMainCardsRecordAsync(recordViewIds)
+        val articleMainCardRecords = recordViewIds.map { articleMainCardDao.selectArticleMainCardsRecordAsync(it)!! }.toSet()
         val coroutineScope = CoroutineScope(Dispatchers.IO)
         val deferredResults = mutableListOf<Deferred<SelectArticleContentsRecord>>()
         recordViewIds.map {
@@ -103,7 +103,7 @@ class BrowseArticlesUseCase(
         val sortedArticles = updateAndSortArticleViews(articleMainCardRecords, articleViewsRecords)
         val selectArticleContentsRecords = deferredResults.awaitAll().associateBy { it.articleId }
         sortedArticles.forEach {
-            it.content = selectArticleContentsRecords[it.articleId]?.content?.substring(0, 200) ?: ""
+            it.content = selectArticleContentsRecords[it.articleId]?.content?.substring(0, 500) ?: ""
         }
 
         val articleUseCaseOuts: List<ReadArticleUseCaseOut> =

@@ -25,6 +25,7 @@ class LocalCacheConfig {
         const val SELECT_ARTICLE_RECORD_CACHE = "selectArticleRecordCache"
         const val SELECT_WORKBOOK_RECORD_CACHE = "selectWorkBookRecordCache"
         const val SELECT_WRITER_CACHE = "selectWritersCache"
+        const val SELECT_MAIN_CARD_CACHE = "selectMainCardCache"
     }
 
     @Bean(LOCAL_CM)
@@ -39,6 +40,15 @@ class LocalCacheConfig {
             LocalCacheEventLogger::class.java
         )
         val cacheManager = EhcacheCachingProvider().cacheManager
+
+        val cache100Configuration = CacheConfigurationBuilder.newCacheConfigurationBuilder(
+            Any::class.java,
+            Any::class.java,
+            ResourcePoolsBuilder.newResourcePoolsBuilder()
+                .heap(100, EntryUnit.ENTRIES)
+        )
+            .withService(cacheEventListenerConfigurationConfig)
+            .build()
 
         val cache10Configuration = CacheConfigurationBuilder.newCacheConfigurationBuilder(
             Any::class.java,
@@ -58,6 +68,9 @@ class LocalCacheConfig {
             .withService(cacheEventListenerConfigurationConfig)
             .build()
 
+        val selectMainCardCacheConfig: javax.cache.configuration.Configuration<Any, Any> =
+            Eh107Configuration.fromEhcacheCacheConfiguration(cache100Configuration)
+
         val selectArticleRecordCacheConfig: javax.cache.configuration.Configuration<Any, Any> =
             Eh107Configuration.fromEhcacheCacheConfiguration(cache10Configuration)
         val selectWorkBookRecordCacheConfig: javax.cache.configuration.Configuration<Any, Any> =
@@ -70,6 +83,7 @@ class LocalCacheConfig {
             cacheManager.createCache(SELECT_ARTICLE_RECORD_CACHE, selectArticleRecordCacheConfig)
             cacheManager.createCache(SELECT_WORKBOOK_RECORD_CACHE, selectWorkBookRecordCacheConfig)
             cacheManager.createCache(SELECT_WRITER_CACHE, selectWriterCacheConfig)
+            cacheManager.createCache(SELECT_MAIN_CARD_CACHE, selectMainCardCacheConfig)
         }.onFailure {
             log.error(it) { "Failed to create cache" }
         }
