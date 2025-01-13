@@ -67,37 +67,38 @@ class BrowseArticlesUseCase(
 //            }
 //        }
 
-        val recordViewIds = articleViewsRecords.map { it.articleId }.toSet()
-        val deferredResults =
-            recordViewIds.map { id ->
-                val articleMainCardRecord = articleMainCardDao.selectArticleMainCardsRecordAsync(id)
-                val selectArticleContentsRecord = articleDao.selectArticleContentsAsync(id)
-                articleMainCardRecord.apply {
-                    this.content = selectArticleContentsRecord.content
-                }
-            }
-        val articleMainCardRecords = deferredResults.toMutableSet()
-//        val coroutineScope = CoroutineScope(Dispatchers.IO)
 //        val recordViewIds = articleViewsRecords.map { it.articleId }.toSet()
-//        val deferredResults = mutableListOf<Deferred<ArticleMainCardRecord>>()
-//        recordViewIds.map { id ->
-//            val routine =
-//                coroutineScope.async {
-//                    val articleMainCardRecord = articleMainCardDao.selectArticleMainCardsRecordAsync(id)
-//                    val selectArticleContentsRecord = articleDao.selectArticleContentsAsync(id)
-//                    articleMainCardRecord?.apply {
-//                        this.content = selectArticleContentsRecord.content
-//                    }!!
+//        val deferredResults =
+//            recordViewIds.map { id ->
+//                val articleMainCardRecord = articleMainCardDao.selectArticleMainCardsRecordAsync(id)
+//                val selectArticleContentsRecord = articleDao.selectArticleContentsAsync(id)
+//                articleMainCardRecord.apply {
+//                    this.content = selectArticleContentsRecord.content
 //                }
-//            deferredResults.add(routine)
-//        }
-//        val articleMainCardRecords = deferredResults.awaitAll().toMutableSet()
+//            }
+//        val articleMainCardRecords = deferredResults.toMutableSet()
+        val coroutineScope = CoroutineScope(Dispatchers.IO)
+        val recordViewIds = articleViewsRecords.map { it.articleId }.toSet()
+        val deferredResults = mutableListOf<Deferred<ArticleMainCardRecord>>()
+        recordViewIds.map { id ->
+            val routine =
+                coroutineScope.async {
+                    val articleMainCardRecord = articleMainCardDao.selectArticleMainCardsRecordAsync(id)
+                    val selectArticleContentsRecord = articleDao.selectArticleContentsAsync(id)
+                    articleMainCardRecord.apply {
+                        this.content = selectArticleContentsRecord.content
+                    }
+                }
+            deferredResults.add(routine)
+        }
+        val articleMainCardRecords = deferredResults.awaitAll().toMutableSet()
 
         /**
          * 아티클 조회수 순, 조회수가 같을 경우 최신 아티클이 우선순위를 가지도록 정렬 (TODO: 삭제시 양향도 파악 필요)
          */
         val sortedArticles = updateAndSortArticleViews(articleMainCardRecords, articleViewsRecords)
-        val selectArticleContentsRecords = deferredResults.associateBy { it.articleId }
+//        val selectArticleContentsRecords = deferredResults.associateBy { it.articleId }
+        val selectArticleContentsRecords = deferredResults.awaitAll().associateBy { it.articleId }
         sortedArticles.forEach {
             it.content = selectArticleContentsRecords[it.articleId]?.content?.substring(0, 500) ?: ""
         }
