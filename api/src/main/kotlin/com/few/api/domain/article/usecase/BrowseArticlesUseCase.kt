@@ -11,9 +11,6 @@ import com.few.api.repo.dao.article.record.ArticleMainCardRecord
 import com.few.api.repo.dao.article.record.SelectArticleViewsRecord
 import com.few.data.common.code.CategoryType
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.asFlow
-import kotlinx.coroutines.flow.flatMapMerge
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.toSet
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
@@ -76,19 +73,20 @@ class BrowseArticlesUseCase(
 //            }
 //        }
 
-        val recordViewIds = articleViewsRecords.map { it.articleId }.toSet()
-        val articleMainCardRecords = recordViewIds.asFlow()
-            .flatMapMerge { id ->
-                flow {
-                    val articleMainCardRecord = articleMainCardDao.selectArticleMainCardsRecordAsync(id)
-                    val selectArticleContentsRecord = articleDao.selectArticleContentsAsync(id)
-                    articleMainCardRecord.apply {
-                        this.content = selectArticleContentsRecord.content
-                    }
-                    emit(articleMainCardRecord)
-                }
-            }
-            .toSet()
+//        val recordViewIds = articleViewsRecords.map { it.articleId }.toSet()
+//        val articleMainCardRecords = recordViewIds.asFlow()
+//            .flatMapMerge { id ->
+//                flow {
+//                    val articleMainCardRecord = articleMainCardDao.selectArticleMainCardsRecordAsync(id)
+//                    val selectArticleContentsRecord = articleDao.selectArticleContentsAsync(id)
+//                    articleMainCardRecord.apply {
+//                        this.content = selectArticleContentsRecord.content
+//                    }
+//                    emit(articleMainCardRecord)
+//                }
+//            }
+//            .toSet()
+
 //        val coroutineScope = CoroutineScope(Dispatchers.IO)
 //        val recordViewIds = articleViewsRecords.map { it.articleId }.toSet()
 //        val deferredResults = mutableListOf<Deferred<ArticleMainCardRecord>>()
@@ -104,6 +102,17 @@ class BrowseArticlesUseCase(
 //            deferredResults.add(routine)
 //        }
 //        val articleMainCardRecords = deferredResults.awaitAll().toMutableSet()
+
+        val recordViewIds = articleViewsRecords.map { it.articleId }.toSet()
+        val deferredResults =
+            recordViewIds.map { id ->
+                val articleMainCardRecord = articleMainCardDao.selectArticleMainCardsRecordAsync(id)
+                val selectArticleContentsRecord = articleDao.selectArticleContentsAsync(id)
+                articleMainCardRecord.apply {
+                    this.content = selectArticleContentsRecord.content
+                }
+            }
+        val articleMainCardRecords = deferredResults.toMutableSet()
 
         /**
          * 아티클 조회수 순, 조회수가 같을 경우 최신 아티클이 우선순위를 가지도록 정렬 (TODO: 삭제시 양향도 파악 필요)
