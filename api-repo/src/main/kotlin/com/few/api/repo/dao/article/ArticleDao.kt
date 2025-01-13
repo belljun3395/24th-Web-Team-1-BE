@@ -6,7 +6,7 @@ import com.few.api.repo.dao.article.record.*
 import com.few.data.common.code.MemberType
 import jooq.jooq_dsl.tables.*
 import jooq.jooq_dsl.tables.MappingWorkbookArticle.MAPPING_WORKBOOK_ARTICLE
-import kotlinx.coroutines.reactive.awaitFirst
+import kotlinx.coroutines.reactive.awaitSingle
 import org.jooq.*
 import org.jooq.impl.DSL
 import org.springframework.stereotype.Repository
@@ -136,7 +136,7 @@ class ArticleDao(
             ).from(ArticleIfo.ARTICLE_IFO)
             .where(ArticleIfo.ARTICLE_IFO.ARTICLE_MST_ID.eq(articleId))
             .and(ArticleIfo.ARTICLE_IFO.DELETED_AT.isNull)
-            .awaitFirst()
+            .awaitSingle()
             .into(SelectArticleContentsRecord::class.java)
 
     fun selectArticleContentsQuery(articleIds: Set<Long>) =

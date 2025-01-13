@@ -7,7 +7,7 @@ import com.few.api.repo.dao.article.support.ArticleMainCardMapper
 import com.few.api.repo.dao.article.support.CommonJsonMapper
 import jooq.jooq_dsl.tables.ArticleMainCard.ARTICLE_MAIN_CARD
 import kotlinx.coroutines.future.await
-import kotlinx.coroutines.reactive.awaitFirst
+import kotlinx.coroutines.reactive.awaitSingle
 import org.jooq.*
 import org.jooq.impl.DSL.*
 import org.springframework.stereotype.Repository
@@ -59,7 +59,7 @@ class ArticleMainCardDao(
                 ARTICLE_MAIN_CARD.WORKBOOKS.`as`(ArticleMainCardRecord::workbooks.name)
             ).from(ARTICLE_MAIN_CARD)
             .where(ARTICLE_MAIN_CARD.ID.eq(articleId))
-            .awaitFirst()
+            .awaitSingle()
             .map {
                 articleMainCardMapper.map(it)
             }

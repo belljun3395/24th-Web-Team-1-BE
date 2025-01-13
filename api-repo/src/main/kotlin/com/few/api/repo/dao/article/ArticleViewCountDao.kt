@@ -24,12 +24,12 @@ import com.few.api.repo.dao.article.record.SelectArticleViewsRecord
 import com.few.data.common.code.CategoryType
 import jooq.jooq_dsl.tables.ArticleViewCount.ARTICLE_VIEW_COUNT
 import jooq.jooq_dsl.tables.SendArticleEventHistory.SEND_ARTICLE_EVENT_HISTORY
-import kotlinx.coroutines.future.await
 import kotlinx.coroutines.reactive.awaitSingle
 import kotlinx.coroutines.reactor.awaitSingle
 import org.jooq.DSLContext
 import org.jooq.impl.DSL.*
 import org.springframework.stereotype.Repository
+import reactor.core.publisher.Flux
 
 object TempTable {
     const val ARTICLE_ID_COLUMN = "ARTICLE_ID"
@@ -151,10 +151,16 @@ class ArticleViewCountDao(
             .fetchInto(SelectArticleViewsRecord::class.java)
 
     suspend fun selectArticlesOrderByViewsAsync(query: SelectArticlesOrderByViewsQuery): List<SelectArticleViewsRecord> =
-        selectArticlesOrderByViewsQuery(query)
-            .fetchAsync()
-            .await()
-            .into(SelectArticleViewsRecord::class.java)
+        Flux.from(
+            selectArticlesOrderByViewsQuery(query)
+        ).collectList()
+            .awaitSingle()
+            .map {
+                SelectArticleViewsRecord(
+                    articleId = it[SelectArticleViewsRecord::articleId.name] as Long,
+                    views = it[SelectArticleViewsRecord::views.name] as Long
+                )
+            }.toList()
 
     fun selectArticlesOrderByViewsQuery(query: SelectArticlesOrderByViewsQuery) =
         dslContext
