@@ -14,7 +14,6 @@ import com.few.data.common.code.CategoryType
 import kotlinx.coroutines.*
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
-import java.util.*
 
 @Component
 class BrowseArticlesUseCase(
@@ -62,11 +61,10 @@ class BrowseArticlesUseCase(
 
         val recordViewIds = articleViewsRecords.map { it.articleId }.toSet()
         val articleMainCardRecords = recordViewIds.map { articleMainCardDao.selectArticleMainCardsRecordAsync(it)!! }.toSet()
-        val coroutineScope = CoroutineScope(Dispatchers.IO)
-        val deferredResults = mutableListOf<Deferred<SelectArticleContentsRecord>>()
-        recordViewIds.map {
-            coroutineScope.async { articleDao.selectArticleContentsAsync(it) }.let {
-                deferredResults.add(it)
+        val deferredResults = mutableListOf<SelectArticleContentsRecord>()
+        recordViewIds.map { id ->
+            withContext(Dispatchers.IO) {
+                articleDao.selectArticleContentsAsync(id)
             }
         }
 
@@ -101,7 +99,7 @@ class BrowseArticlesUseCase(
          * 아티클 조회수 순, 조회수가 같을 경우 최신 아티클이 우선순위를 가지도록 정렬 (TODO: 삭제시 양향도 파악 필요)
          */
         val sortedArticles = updateAndSortArticleViews(articleMainCardRecords, articleViewsRecords)
-        val selectArticleContentsRecords = deferredResults.awaitAll().associateBy { it.articleId }
+        val selectArticleContentsRecords = deferredResults.associateBy { it.articleId }
         sortedArticles.forEach {
             it.content = selectArticleContentsRecords[it.articleId]?.content?.substring(0, 500) ?: ""
         }
