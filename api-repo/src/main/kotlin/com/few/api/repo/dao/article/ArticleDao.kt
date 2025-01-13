@@ -18,7 +18,6 @@ import org.springframework.stereotype.Repository
 class ArticleDao(
     private val dslContext: DSLContext,
 ) {
-    @Cacheable(key = "#query.articleId", cacheManager = LOCAL_CM, cacheNames = [SELECT_ARTICLE_RECORD_CACHE])
     fun selectArticleRecord(query: SelectArticleRecordQuery): SelectArticleRecord? =
         selectArticleRecordQuery(query)
             .fetchOneInto(SelectArticleRecord::class.java)
@@ -132,6 +131,7 @@ class ArticleDao(
         selectArticleContentsQuery(articleIds)
             .fetchInto(SelectArticleContentsRecord::class.java)
 
+    @Cacheable(key = "#articleId", cacheManager = LOCAL_CM, cacheNames = [SELECT_ARTICLE_RECORD_CACHE])
     suspend fun selectArticleContentsAsync(articleId: Long): SelectArticleContentsRecord =
         dslContext
             .select(

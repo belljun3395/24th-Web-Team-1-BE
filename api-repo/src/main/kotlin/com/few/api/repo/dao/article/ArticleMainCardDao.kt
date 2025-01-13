@@ -1,5 +1,7 @@
 package com.few.api.repo.dao.article
 
+import com.few.api.repo.config.LocalCacheConfig.Companion.LOCAL_CM
+import com.few.api.repo.config.LocalCacheConfig.Companion.SELECT_MAIN_CARD_CACHE
 import com.few.api.repo.dao.article.command.ArticleMainCardExcludeWorkbookCommand
 import com.few.api.repo.dao.article.command.UpdateArticleMainCardWorkbookCommand
 import com.few.api.repo.dao.article.record.ArticleMainCardRecord
@@ -10,6 +12,7 @@ import kotlinx.coroutines.future.await
 import kotlinx.coroutines.reactive.awaitFirst
 import org.jooq.*
 import org.jooq.impl.DSL.*
+import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Repository
 
 @Repository
@@ -34,7 +37,8 @@ class ArticleMainCardDao(
             }
             .toSet()
 
-    suspend fun selectArticleMainCardsRecordAsync(articleId: Long): ArticleMainCardRecord? =
+    @Cacheable(key = "#articleId", cacheManager = LOCAL_CM, cacheNames = [SELECT_MAIN_CARD_CACHE])
+    suspend fun selectArticleMainCardsRecordAsync(articleId: Long): ArticleMainCardRecord =
         dslContext
             .select(
                 ARTICLE_MAIN_CARD.ID.`as`(ArticleMainCardRecord::articleId.name),
@@ -48,8 +52,14 @@ class ArticleMainCardDao(
                     ARTICLE_MAIN_CARD.WRITER_DESCRIPTION,
                     "name"
                 ).`as`(ArticleMainCardRecord::writerName.name),
-                jsonGetAttribute(ARTICLE_MAIN_CARD.WRITER_DESCRIPTION, "url").`as`(ArticleMainCardRecord::writerUrl.name),
-                jsonGetAttribute(ARTICLE_MAIN_CARD.WRITER_DESCRIPTION, "imageUrl").`as`(ArticleMainCardRecord::writerImgUrl.name),
+                jsonGetAttribute(
+                    ARTICLE_MAIN_CARD.WRITER_DESCRIPTION,
+                    "url"
+                ).`as`(ArticleMainCardRecord::writerUrl.name),
+                jsonGetAttribute(
+                    ARTICLE_MAIN_CARD.WRITER_DESCRIPTION,
+                    "imageUrl"
+                ).`as`(ArticleMainCardRecord::writerImgUrl.name),
                 ARTICLE_MAIN_CARD.WORKBOOKS.`as`(ArticleMainCardRecord::workbooks.name)
             ).from(ARTICLE_MAIN_CARD)
             .where(ARTICLE_MAIN_CARD.ID.eq(articleId))
