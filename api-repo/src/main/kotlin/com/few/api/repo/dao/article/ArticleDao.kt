@@ -135,8 +135,8 @@ class ArticleDao(
     suspend fun selectArticleContentsAsync(articleId: Long): SelectArticleContentsRecord =
         dslContext
             .select(
-                ArticleIfo.ARTICLE_IFO.ARTICLE_MST_ID.`as`(SelectArticleContentsRecord::articleId.name)
-//                ArticleIfo.ARTICLE_IFO.CONTENT.`as`(SelectArticleContentsRecord::content.name)
+                ArticleIfo.ARTICLE_IFO.ARTICLE_MST_ID.`as`(SelectArticleContentsRecord::articleId.name),
+                ArticleIfo.ARTICLE_IFO.CONTENT.`as`(SelectArticleContentsRecord::content.name)
             ).from(ArticleIfo.ARTICLE_IFO)
             .where(ArticleIfo.ARTICLE_IFO.ARTICLE_MST_ID.eq(articleId))
             .and(ArticleIfo.ARTICLE_IFO.DELETED_AT.isNull)
