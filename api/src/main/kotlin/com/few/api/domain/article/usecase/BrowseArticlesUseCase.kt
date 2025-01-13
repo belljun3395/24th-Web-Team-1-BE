@@ -78,7 +78,7 @@ class BrowseArticlesUseCase(
 
         val recordViewIds = articleViewsRecords.map { it.articleId }.toSet()
         val articleMainCardRecords = recordViewIds.asFlow()
-            .flatMapMerge(concurrency = 4) { id -> // 4개씩 병렬 처리
+            .flatMapMerge { id ->
                 flow {
                     val articleMainCardRecord = articleMainCardDao.selectArticleMainCardsRecordAsync(id)
                     val selectArticleContentsRecord = articleDao.selectArticleContentsAsync(id)
