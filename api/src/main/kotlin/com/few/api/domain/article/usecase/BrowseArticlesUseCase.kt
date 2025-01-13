@@ -14,7 +14,6 @@ import com.few.data.common.code.CategoryType
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 import java.util.*
-import kotlin.Comparator
 
 @Component
 class BrowseArticlesUseCase(
@@ -57,25 +56,22 @@ class BrowseArticlesUseCase(
             true
         }
 
+        val articleViewRecordIds = articleViewsRecords.map { it.articleId }
+
         /**
          * ARTICLE_MAIN_CARD 테이블에서 이번 스크롤에서 보여줄 10개 아티클 조회 (TODO: 캐싱 적용)
          */
-        val articleMainCardRecords: Set<ArticleMainCardRecord> =
-            articleMainCardDao.selectArticleMainCardsRecord(articleViewsRecords.map { it.articleId }.toSet())
+        val articleMainCardRecords: Set<ArticleMainCardRecord> = articleViewRecordIds.map { articleMainCardDao.selectArticleMainCardRecord(it)!! }.toSet()
 
         /**
          * 아티클 컨텐츠는 ARTICLE_MAIN_CARD가 아닌 ARTICLE_IFO에서 조회 (TODO: 캐싱 적용)
          */
-        val selectArticleContentsRecords: List<SelectArticleContentsRecord> =
-            articleDao.selectArticleContents(articleMainCardRecords.map { it.articleId }.toSet())
-        setContentsToRecords(selectArticleContentsRecords, articleMainCardRecords)
+        val selectArticleContentsRecords: List<SelectArticleContentsRecord> = articleViewRecordIds.map { articleDao.selectArticleContent(it)!! }.toList()
+        articleMainCardRecords.withIndex().forEach { (index, articleMainCardRecord) ->
+            articleMainCardRecord.content = selectArticleContentsRecords[index].content
+        }
 
-        /**
-         * 아티클 조회수 순, 조회수가 같을 경우 최신 아티클이 우선순위를 가지도록 정렬 (TODO: 삭제시 양향도 파악 필요)
-         */
-        val sortedArticles = updateAndSortArticleViews(articleMainCardRecords, articleViewsRecords)
-
-        val articleUseCaseOuts: List<ReadArticleUseCaseOut> = sortedArticles.map { a ->
+        val articleUseCaseOuts: List<ReadArticleUseCaseOut> = articleMainCardRecords.map { a ->
             ReadArticleUseCaseOut(
                 id = a.articleId,
                 writer = WriterDetail(
@@ -98,52 +94,5 @@ class BrowseArticlesUseCase(
         }.toList()
 
         return ReadArticlesUseCaseOut(articleUseCaseOuts, isLast)
-    }
-
-    private fun updateAndSortArticleViews(
-        articleRecords: Set<ArticleMainCardRecord>,
-        articleViewsRecords: List<SelectArticleViewsRecord>,
-    ): Set<ArticleMainCardRecord> {
-        val sortedSet = TreeSet(
-            Comparator<ArticleMainCardRecord> { a1, a2 ->
-                // views 값이 null일 경우 0으로 간주
-                val views1 = a1.views ?: 0
-                val views2 = a2.views ?: 0
-
-                // views 내림차순 정렬
-                val viewComparison = views2.compareTo(views1)
-
-                if (viewComparison != 0) {
-                    viewComparison
-                } else {
-                    // views가 같을 경우 articleId 내림차순 정렬(최신글)
-                    val articleId1 = a1.articleId
-                    val articleId2 = a2.articleId
-                    articleId2.compareTo(articleId1)
-                }
-            }
-        )
-
-        val viewsMap = articleViewsRecords.associateBy({ it.articleId }, { it.views })
-
-        articleRecords.forEach { article ->
-            val updatedViews = viewsMap[article.articleId] ?: 0
-            article.views = updatedViews
-            sortedSet.add(article)
-        }
-
-        return sortedSet
-    }
-
-    private fun setContentsToRecords(
-        articleContentsRecords: List<SelectArticleContentsRecord>,
-        articleMainCardRecords: Set<ArticleMainCardRecord>,
-    ) {
-        val articleMainCardRecordsMap: Map<Long, ArticleMainCardRecord> =
-            articleMainCardRecords.associateBy { it.articleId }
-
-        articleContentsRecords.map { articleContentRecord ->
-            articleMainCardRecordsMap[articleContentRecord.articleId]?.content = articleContentRecord.content
-        }
     }
 }

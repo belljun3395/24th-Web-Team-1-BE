@@ -128,6 +128,14 @@ class ArticleDao(
         selectArticleContentsQuery(articleIds)
             .fetchInto(SelectArticleContentsRecord::class.java)
 
+    fun selectArticleContent(articleId: Long): SelectArticleContentsRecord? = dslContext.select(
+        ArticleIfo.ARTICLE_IFO.ARTICLE_MST_ID.`as`(SelectArticleContentsRecord::articleId.name),
+        ArticleIfo.ARTICLE_IFO.CONTENT.`as`(SelectArticleContentsRecord::content.name)
+    ).from(ArticleIfo.ARTICLE_IFO)
+        .where(ArticleIfo.ARTICLE_IFO.ARTICLE_MST_ID.eq(articleId))
+        .and(ArticleIfo.ARTICLE_IFO.DELETED_AT.isNull)
+        .fetchOneInto(SelectArticleContentsRecord::class.java)
+
     fun selectArticleContentsQuery(articleIds: Set<Long>) = dslContext.select(
         ArticleIfo.ARTICLE_IFO.ARTICLE_MST_ID.`as`(SelectArticleContentsRecord::articleId.name),
         ArticleIfo.ARTICLE_IFO.CONTENT.`as`(SelectArticleContentsRecord::content.name)
