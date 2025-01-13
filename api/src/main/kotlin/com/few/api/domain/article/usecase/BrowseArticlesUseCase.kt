@@ -8,7 +8,6 @@ import com.few.api.repo.dao.article.ArticleViewCountDao
 import com.few.api.repo.dao.article.query.SelectArticlesOrderByViewsQuery
 import com.few.api.repo.dao.article.query.SelectRankByViewsQuery
 import com.few.api.repo.dao.article.record.ArticleMainCardRecord
-import com.few.api.repo.dao.article.record.SelectArticleContentsRecord
 import com.few.api.repo.dao.article.record.SelectArticleViewsRecord
 import com.few.data.common.code.CategoryType
 import kotlinx.coroutines.*
@@ -59,26 +58,25 @@ class BrowseArticlesUseCase(
                 true
             }
 
-        val recordViewIds = articleViewsRecords.map { it.articleId }.toSet()
-        val articleMainCardRecords = recordViewIds.map { articleMainCardDao.selectArticleMainCardsRecordAsync(it)!! }.toSet()
-        val deferredResults = mutableListOf<SelectArticleContentsRecord>()
-        recordViewIds.map { id ->
-            withContext(Dispatchers.IO) {
-                articleDao.selectArticleContentsAsync(id)
-            }
-        }
-
 //        val recordViewIds = articleViewsRecords.map { it.articleId }.toSet()
-
-//        val deferredResults =
-//            recordViewIds.map { id ->
-//                val articleMainCardRecord = articleMainCardDao.selectArticleMainCardsRecordAsync(id)
-//                val selectArticleContentsRecord = articleDao.selectArticleContentsAsync(id)
-//                articleMainCardRecord?.apply {
-//                    this.content = selectArticleContentsRecord.content
-//                }!!
+//        val articleMainCardRecords = recordViewIds.map { articleMainCardDao.selectArticleMainCardsRecordAsync(it)!! }.toSet()
+//        val deferredResults = mutableListOf<SelectArticleContentsRecord>()
+//        recordViewIds.map { id ->
+//            withContext(Dispatchers.IO) {
+//                articleDao.selectArticleContentsAsync(id)
 //            }
-//        val articleMainCardRecords = deferredResults.toMutableSet()
+//        }
+
+        val recordViewIds = articleViewsRecords.map { it.articleId }.toSet()
+        val deferredResults =
+            recordViewIds.map { id ->
+                val articleMainCardRecord = articleMainCardDao.selectArticleMainCardsRecordAsync(id)
+                val selectArticleContentsRecord = articleDao.selectArticleContentsAsync(id)
+                articleMainCardRecord.apply {
+                    this.content = selectArticleContentsRecord.content
+                }
+            }
+        val articleMainCardRecords = deferredResults.toMutableSet()
 //        val coroutineScope = CoroutineScope(Dispatchers.IO)
 //        val recordViewIds = articleViewsRecords.map { it.articleId }.toSet()
 //        val deferredResults = mutableListOf<Deferred<ArticleMainCardRecord>>()
