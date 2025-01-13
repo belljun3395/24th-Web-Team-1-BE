@@ -99,7 +99,7 @@ class BrowseArticlesUseCase(
         val sortedArticles = updateAndSortArticleViews(articleMainCardRecords, articleViewsRecords)
         val selectArticleContentsRecords = deferredResults.associateBy { it.articleId }
         sortedArticles.forEach {
-            it.content = selectArticleContentsRecords[it.articleId]?.content?.substring(0, 500) ?: ""
+            it.content = selectArticleContentsRecords[it.articleId]?.content ?: ""
         }
 
         val articleUseCaseOuts: List<ReadArticleUseCaseOut> =
