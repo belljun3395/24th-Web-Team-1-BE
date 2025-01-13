@@ -41,11 +41,11 @@ class LocalCacheConfig {
         )
         val cacheManager = EhcacheCachingProvider().cacheManager
 
-        val cache100Configuration = CacheConfigurationBuilder.newCacheConfigurationBuilder(
+        val cache200Configuration = CacheConfigurationBuilder.newCacheConfigurationBuilder(
             Any::class.java,
             Any::class.java,
             ResourcePoolsBuilder.newResourcePoolsBuilder()
-                .heap(100, EntryUnit.ENTRIES)
+                .heap(200, EntryUnit.ENTRIES)
         )
             .withService(cacheEventListenerConfigurationConfig)
             .build()
@@ -69,7 +69,7 @@ class LocalCacheConfig {
             .build()
 
         val selectMainCardCacheConfig: javax.cache.configuration.Configuration<Any, Any> =
-            Eh107Configuration.fromEhcacheCacheConfiguration(cache100Configuration)
+            Eh107Configuration.fromEhcacheCacheConfiguration(cache200Configuration)
 
         val selectArticleRecordCacheConfig: javax.cache.configuration.Configuration<Any, Any> =
             Eh107Configuration.fromEhcacheCacheConfiguration(cache10Configuration)

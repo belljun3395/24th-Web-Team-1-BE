@@ -1,5 +1,5 @@
 storage:
-    url: http://127.0.0.1:9000
+    url: http://127.0.0.1:9001
     access-key: thisisroot
     secret-key: thisisroot
     region: ap-northeast-2

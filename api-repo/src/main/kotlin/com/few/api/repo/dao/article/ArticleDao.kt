@@ -1,5 +1,7 @@
 package com.few.api.repo.dao.article
 
+import com.few.api.repo.config.LocalCacheConfig.Companion.LOCAL_CM
+import com.few.api.repo.config.LocalCacheConfig.Companion.SELECT_ARTICLE_RECORD_CACHE
 import com.few.api.repo.dao.article.command.InsertFullArticleRecordCommand
 import com.few.api.repo.dao.article.query.*
 import com.few.api.repo.dao.article.record.*
@@ -9,6 +11,7 @@ import jooq.jooq_dsl.tables.MappingWorkbookArticle.MAPPING_WORKBOOK_ARTICLE
 import kotlinx.coroutines.reactive.awaitFirst
 import org.jooq.*
 import org.jooq.impl.DSL
+import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Repository
 
 @Repository
@@ -128,6 +131,7 @@ class ArticleDao(
         selectArticleContentsQuery(articleIds)
             .fetchInto(SelectArticleContentsRecord::class.java)
 
+    @Cacheable(key = "#articleId", cacheManager = LOCAL_CM, cacheNames = [SELECT_ARTICLE_RECORD_CACHE])
     suspend fun selectArticleContentsAsync(articleId: Long): SelectArticleContentsRecord =
         dslContext
             .select(
