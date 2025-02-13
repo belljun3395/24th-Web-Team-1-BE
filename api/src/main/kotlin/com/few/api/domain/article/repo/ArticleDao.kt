@@ -10,6 +10,7 @@ import jooq.jooq_dsl.tables.*
 import jooq.jooq_dsl.tables.MappingWorkbookArticle.MAPPING_WORKBOOK_ARTICLE
 import org.jooq.*
 import org.jooq.impl.DSL
+import org.jooq.kotlin.coroutines.transactionCoroutine
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Repository
 
@@ -129,7 +130,15 @@ class ArticleDao(
 
     fun selectArticleContents(articleIds: Set<Long>): List<SelectArticleContentsRecord> =
         selectArticleContentsQuery(articleIds)
+            .query
             .fetchInto(SelectArticleContentsRecord::class.java)
+
+    suspend fun selectArticleContentsAsync(articleIds: Set<Long>): List<SelectArticleContentsRecord> =
+        dslContext.transactionCoroutine {
+            selectArticleContentsQuery(articleIds)
+                .query
+                .fetchInto(SelectArticleContentsRecord::class.java)
+        }
 
     fun selectArticleContentsQuery(articleIds: Set<Long>) =
         dslContext

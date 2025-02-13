@@ -24,8 +24,15 @@ import com.few.api.domain.article.repo.record.SelectArticleViewsRecord
 import com.few.api.domain.common.vo.CategoryType
 import jooq.jooq_dsl.tables.ArticleViewCount.ARTICLE_VIEW_COUNT
 import jooq.jooq_dsl.tables.SendArticleEventHistory.SEND_ARTICLE_EVENT_HISTORY
+import kotlinx.coroutines.reactive.awaitFirstOrNull
 import org.jooq.DSLContext
-import org.jooq.impl.DSL.*
+import org.jooq.impl.DSL.count
+import org.jooq.impl.DSL.field
+import org.jooq.impl.DSL.ifnull
+import org.jooq.impl.DSL.noCondition
+import org.jooq.impl.DSL.orderBy
+import org.jooq.impl.DSL.rowNumber
+import org.jooq.kotlin.coroutines.transactionCoroutine
 import org.springframework.stereotype.Repository
 
 object TempTable {
@@ -93,7 +100,13 @@ class ArticleViewCountDao(
 
     fun selectRankByViews(query: SelectRankByViewsQuery): Long? =
         selectRankByViewsQuery(query)
+            .query
             .fetchOneInto(Long::class.java)
+
+    suspend fun selectRankByViewsAsync(query: SelectRankByViewsQuery): Long? =
+        selectRankByViewsQuery(query)
+            .awaitFirstOrNull()
+            ?.into(Long::class.java)
 
     fun selectRankByViewsQuery(query: SelectRankByViewsQuery) =
         dslContext
@@ -135,11 +148,18 @@ class ArticleViewCountDao(
                             ).asTable(TOTAL_VIEW_COUNT_TABLE),
                     ).asTable(ROW_RANK_TABLE),
             ).where(field(ROW_RANK_TABLE_ARTICLE_ID).eq(query.articleId))
-            .query
 
     fun selectArticlesOrderByViews(query: SelectArticlesOrderByViewsQuery): List<SelectArticleViewsRecord> =
         selectArticlesOrderByViewsQuery(query)
+            .query
             .fetchInto(SelectArticleViewsRecord::class.java)
+
+    suspend fun selectArticlesOrderByViewsAsync(query: SelectArticlesOrderByViewsQuery): List<SelectArticleViewsRecord> =
+        dslContext.transactionCoroutine {
+            selectArticlesOrderByViewsQuery(query)
+                .query
+                .fetchInto(SelectArticleViewsRecord::class.java)
+        }
 
     fun selectArticlesOrderByViewsQuery(query: SelectArticlesOrderByViewsQuery) =
         dslContext
@@ -186,5 +206,4 @@ class ArticleViewCountDao(
                     else -> field(ARTICLE_VIEW_COUNT_OFFSET_TABLE_CATEGORY_CD).eq(query.category.code)
                 },
             ).limit(11)
-            .query
 }

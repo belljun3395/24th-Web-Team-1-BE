@@ -12,6 +12,7 @@ import com.few.api.domain.article.repo.record.SelectArticleViewsRecord
 import com.few.api.domain.article.usecase.dto.*
 import com.few.api.domain.common.exception.NotFoundException
 import com.few.api.domain.common.vo.CategoryType
+import kotlinx.coroutines.*
 import org.springframework.stereotype.Component
 import java.util.*
 import kotlin.Comparator
@@ -23,90 +24,100 @@ class BrowseArticlesUseCase(
     private val articleDao: ArticleDao,
 ) {
     @ApiTransactional(readOnly = true)
-    fun execute(useCaseIn: ReadArticlesUseCaseIn): ReadArticlesUseCaseOut {
-        /**
-         * 아티클 조회수 테이블에서 마지막 읽은 아티클 아이디, 카테고리를 기반으로 Offset(테이블 row 순위)을 구함
-         */
-        val offset =
-            if (useCaseIn.prevArticleId <= 0) {
-                0L
-            } else {
-                articleViewCountDao.selectRankByViews(
-                    SelectRankByViewsQuery(useCaseIn.prevArticleId),
-                ) ?: 0
-            }
+    suspend fun execute(useCaseIn: ReadArticlesUseCaseIn): ReadArticlesUseCaseOut =
+        coroutineScope {
+            /**
+             * 아티클 조회수 테이블에서 마지막 읽은 아티클 아이디, 카테고리를 기반으로 Offset(테이블 row 순위)을 구함
+             */
+            val offset =
+                if (useCaseIn.prevArticleId <= 0) {
+                    0L
+                } else {
+                    articleViewCountDao.selectRankByViewsAsync(
+                        SelectRankByViewsQuery(useCaseIn.prevArticleId),
+                    ) ?: 0
+                }
 
-        /**
-         * 구한 Offset을 기준으로 이번 스크롤에서 보여줄 아티클 11개를 뽑아옴
-         * 카테고리 별, 조회수 순 11개. 조회수가 같을 경우 최신 아티클이 우선순위를 가짐
-         */
-        val articleViewsRecords: MutableList<SelectArticleViewsRecord> =
-            articleViewCountDao
-                .selectArticlesOrderByViews(
-                    SelectArticlesOrderByViewsQuery(
-                        offset,
-                        CategoryType.fromCode(useCaseIn.categoryCd) ?: CategoryType.All,
-                    ),
-                ).toMutableList()
+            /**
+             * 구한 Offset을 기준으로 이번 스크롤에서 보여줄 아티클 11개를 뽑아옴
+             * 카테고리 별, 조회수 순 11개. 조회수가 같을 경우 최신 아티클이 우선순위를 가짐
+             */
+            val articleViewsRecords: MutableList<SelectArticleViewsRecord> =
+                articleViewCountDao
+                    .selectArticlesOrderByViewsAsync(
+                        SelectArticlesOrderByViewsQuery(
+                            offset,
+                            CategoryType.fromCode(useCaseIn.categoryCd) ?: CategoryType.All,
+                        ),
+                    ).toMutableList()
 
-        /**
-         * 11개를 조회한 상황에서 11개가 조회되지 않았다면 마지막 스크롤로 판단
-         */
-        val isLast =
-            if (articleViewsRecords.size == 11) {
-                articleViewsRecords.removeAt(10)
-                false
-            } else {
-                true
-            }
+            /**
+             * 11개를 조회한 상황에서 11개가 조회되지 않았다면 마지막 스크롤로 판단
+             */
+            val isLast =
+                if (articleViewsRecords.size == 11) {
+                    articleViewsRecords.removeAt(10)
+                    false
+                } else {
+                    true
+                }
 
-        /**
-         * ARTICLE_MAIN_CARD 테이블에서 이번 스크롤에서 보여줄 10개 아티클 조회 (TODO: 캐싱 적용)
-         */
-        val articleMainCardRecords: Set<ArticleMainCardRecord> =
-            articleMainCardDao.selectArticleMainCardsRecord(articleViewsRecords.map { it.articleId }.toSet())
+            val articleIds = articleViewsRecords.map { it.articleId }.toSet()
 
-        /**
-         * 아티클 컨텐츠는 ARTICLE_MAIN_CARD가 아닌 ARTICLE_IFO에서 조회 (TODO: 캐싱 적용)
-         */
-        val selectArticleContentsRecords: List<SelectArticleContentsRecord> =
-            articleDao.selectArticleContents(articleMainCardRecords.map { it.articleId }.toSet())
-        setContentsToRecords(selectArticleContentsRecords, articleMainCardRecords)
+            /**
+             * ARTICLE_MAIN_CARD 테이블에서 이번 스크롤에서 보여줄 10개 아티클 조회 (TODO: 캐싱 적용)
+             */
+            val articleMainCardRecordsDeferred =
+                async { articleMainCardDao.selectArticleMainCardsRecordAsync(articleIds) }
 
-        /**
-         * 아티클 조회수 순, 조회수가 같을 경우 최신 아티클이 우선순위를 가지도록 정렬 (TODO: 삭제시 양향도 파악 필요)
-         */
-        val sortedArticles = updateAndSortArticleViews(articleMainCardRecords, articleViewsRecords)
+            /**
+             * 아티클 컨텐츠는 ARTICLE_MAIN_CARD가 아닌 ARTICLE_IFO에서 조회 (TODO: 캐싱 적용)
+             */
+            val selectArticleContentsRecordsDeferred = async { articleDao.selectArticleContentsAsync(articleIds) }
 
-        val articleUseCaseOuts: List<ReadArticleUseCaseOut> =
-            sortedArticles
-                .map { a ->
-                    ReadArticleUseCaseOut(
-                        id = a.articleId,
-                        writer =
-                            WriterDetail(
-                                id = a.writerId,
-                                name = a.writerName,
-                                imageUrl = a.writerImgUrl,
-                                url = a.writerUrl,
-                            ),
-                        mainImageUrl = a.mainImageUrl,
-                        title = a.articleTitle,
-                        content = a.content,
-                        problemIds = emptyList(),
-                        category =
-                            CategoryType.fromCode(a.categoryCd)?.displayName
-                                ?: throw NotFoundException("article.invalid.category"),
-                        createdAt = a.createdAt,
-                        views = a.views,
-                        workbooks =
-                            a.workbooks
-                                .map { WorkbookDetail(it.id!!, it.title!!) },
-                    )
-                }.toList()
+            val deferreds = awaitAll(articleMainCardRecordsDeferred, selectArticleContentsRecordsDeferred)
+            val sortedArticles =
+                deferreds.let {
+                    val articleMainCardRecords = it[0] as Set<ArticleMainCardRecord>
+                    val selectArticleContentsRecords = it[1] as List<SelectArticleContentsRecord>
 
-        return ReadArticlesUseCaseOut(articleUseCaseOuts, isLast)
-    }
+                    setContentsToRecords(selectArticleContentsRecords, articleMainCardRecords)
+
+                    /**
+                     * 아티클 조회수 순, 조회수가 같을 경우 최신 아티클이 우선순위를 가지도록 정렬 (TODO: 삭제시 양향도 파악 필요)
+                     */
+                    updateAndSortArticleViews(articleMainCardRecords, articleViewsRecords)
+                }
+
+            val articleUseCaseOuts: List<ReadArticleUseCaseOut> =
+                sortedArticles
+                    .map { a ->
+                        ReadArticleUseCaseOut(
+                            id = a.articleId,
+                            writer =
+                                WriterDetail(
+                                    id = a.writerId,
+                                    name = a.writerName,
+                                    imageUrl = a.writerImgUrl,
+                                    url = a.writerUrl,
+                                ),
+                            mainImageUrl = a.mainImageUrl,
+                            title = a.articleTitle,
+                            content = a.content,
+                            problemIds = emptyList(),
+                            category =
+                                CategoryType.fromCode(a.categoryCd)?.displayName
+                                    ?: throw NotFoundException("article.invalid.category"),
+                            createdAt = a.createdAt,
+                            views = a.views,
+                            workbooks =
+                                a.workbooks
+                                    .map { WorkbookDetail(it.id!!, it.title!!) },
+                        )
+                    }.toList()
+
+            ReadArticlesUseCaseOut(articleUseCaseOuts, isLast)
+        }
 
     private fun updateAndSortArticleViews(
         articleRecords: Set<ArticleMainCardRecord>,

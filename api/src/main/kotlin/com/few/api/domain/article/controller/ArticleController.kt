@@ -72,7 +72,7 @@ class ArticleController(
     }
 
     @GetMapping
-    fun readArticles(
+    suspend fun readArticles(
         @RequestParam(
             required = false,
             defaultValue = "0",

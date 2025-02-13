@@ -55,6 +55,7 @@ dependencies {
 
     /** jooq */
     jooqCodegen("org.jooq:jooq-meta-extensions:${DependencyVersion.JOOQ}")
+    implementation("org.jooq:jooq-kotlin-coroutines:${DependencyVersion.JOOQ}")
     implementation("org.springframework.boot:spring-boot-starter-jooq")
 
     /** flyway */
@@ -295,7 +296,7 @@ tasks.register("buildEcsDockerImage") {
 }
 
 tasks.register("buildPinpointEcsDockerImageDev") {
-    dependsOn("build")
+    dependsOn(":api:bootJar")
 
     doLast {
         exec {

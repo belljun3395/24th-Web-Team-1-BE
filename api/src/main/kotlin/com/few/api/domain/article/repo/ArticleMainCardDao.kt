@@ -8,7 +8,9 @@ import com.few.api.domain.article.repo.support.CommonJsonMapper
 import jooq.jooq_dsl.tables.ArticleMainCard.ARTICLE_MAIN_CARD
 import org.jooq.*
 import org.jooq.impl.DSL.*
+import org.jooq.kotlin.coroutines.transactionCoroutine
 import org.springframework.stereotype.Repository
+import java.util.stream.Collectors.toSet
 
 @Repository
 class ArticleMainCardDao(
@@ -18,8 +20,17 @@ class ArticleMainCardDao(
 ) {
     fun selectArticleMainCardsRecord(articleIds: Set<Long>): Set<ArticleMainCardRecord> =
         selectArticleMainCardsRecordQuery(articleIds)
+            .query
             .fetch(articleMainCardMapper)
             .toSet()
+
+    suspend fun selectArticleMainCardsRecordAsync(articleIds: Set<Long>): Set<ArticleMainCardRecord> =
+        dslContext.transactionCoroutine {
+            selectArticleMainCardsRecordQuery(articleIds)
+                .query
+                .fetch(articleMainCardMapper)
+                .toSet()
+        }
 
     fun selectArticleMainCardsRecordQuery(articleIds: Set<Long>) =
         dslContext
@@ -40,7 +51,6 @@ class ArticleMainCardDao(
                 ARTICLE_MAIN_CARD.WORKBOOKS.`as`(ArticleMainCardRecord::workbooks.name),
             ).from(ARTICLE_MAIN_CARD)
             .where(ARTICLE_MAIN_CARD.ID.`in`(articleIds))
-            .query
 
     /**
      * NOTE - The query performed in this function do not save the workbook.
